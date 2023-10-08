@@ -29,6 +29,11 @@ return new class extends Migration
             $table->string('ket_material', 300)->nullable();
             $table->string('kd_pabrik', 3)->nullable();
             $table->decimal('jarak', 14, 2)->nullable();
+            $table->decimal('harga_angkutan', 14, 2)->nullable();
+            $table->decimal('idx_cad_hpp', 14, 2)->nullable();
+            $table->decimal('idx_cad_transportasi', 14, 2)->nullable();
+            $table->decimal('idx_hpju', 14, 2)->nullable();
+            $table->decimal('biaya_pelaksanaan', 14, 2)->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
