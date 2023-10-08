@@ -224,7 +224,7 @@
                         <div class="card-footer" style="text-align: right;">
                             <a href="{{ route('master-armada.index') }}" class="btn btn-light btn-active-light-primary me-2">Kembali</a>
                             
-                            <button type="submit" :disabled="produk.length < 1" data-kt-contacts-type="submit" class="btn btn-primary" @click.prevent="onSubmit()">
+                            <button type="submit" data-kt-contacts-type="submit" class="btn btn-primary" @click.prevent="onSubmit()">
                                 <span class="indicator-label">Save</span>
                                 <span class="indicator-progress">Please wait...
                                 <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
