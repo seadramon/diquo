@@ -106,7 +106,7 @@ return [
     |
     */
 
-    'migrations' => 'tms_migrations',
+    'migrations' => 'quo_migrations',
 
     /*
     |--------------------------------------------------------------------------
