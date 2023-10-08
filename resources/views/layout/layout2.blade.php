@@ -30,6 +30,9 @@
 			.decimal {
 				text-align: right!important;
 			}
+	        [v-cloak] {
+	            display: none;
+	        }
 		</style>
 		@yield('css')
 	</head>
@@ -64,7 +67,7 @@
 							<!--begin::Symbol-->
 							<div class="symbol symbol-50px">
 								@php
-									$fullname = trim(session('TMP_FULLNAME') ?? Auth::user()->fullname);
+									$fullname = "Quotation";
 								@endphp
 								<img src="{{ Avatar::create($fullname)->setBackground("#10aded")->toBase64() }}" alt="" />
 							</div>
@@ -79,7 +82,7 @@
 										<a href="#" class="text-white text-hover-primary fs-7 fw-bold">{{ $fullname }}</a>
 										<!--end::Username-->
 										<!--begin::Description-->
-										<span class="text-gray-600 fw-semibold d-block fs-8 mb-1" style="width: 100px; word-wrap: break-word;">{{ session('TMP_WILAYAH') ?? Auth::user()->username }}</span>
+										<span class="text-gray-600 fw-semibold d-block fs-8 mb-1" style="width: 100px; word-wrap: break-word;">Damar</span>
 										<!--end::Description-->
 										<!--begin::Label-->
 										<div class="d-flex align-items-center text-success fs-9">
@@ -133,7 +136,7 @@
 						<div class="hover-scroll-overlay-y px-2 my-5 my-lg-5" id="kt_aside_menu_wrapper" data-kt-scroll="true" data-kt-scroll-height="auto" data-kt-scroll-dependencies="{default: '#kt_aside_toolbar, #kt_aside_footer', lg: '#kt_header, #kt_aside_toolbar, #kt_aside_footer'}" data-kt-scroll-wrappers="#kt_aside_menu" data-kt-scroll-offset="5px">
 							<!--begin::Menu-->
 							<div class="menu menu-column menu-title-gray-800 menu-state-title-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-500" id="#kt_aside_menu" data-kt-menu="true">
-								{!! $menus !!}
+								
 							</div>
 							<!--end::Menu-->
 						</div>

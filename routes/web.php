@@ -23,6 +23,8 @@ use App\Http\Controllers\Report\EvaluasiVendorController;
 use App\Http\Controllers\Report\MonitoringDistribusiController;
 use App\Http\Middleware\EnsureSessionIsValid;
 
+use App\Http\Controllers\PenawaranController;
+
 use App\Models\User;
 
 
@@ -36,6 +38,13 @@ use App\Models\User;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::group(['prefix' => '/penawaran', 'as' => 'penawaran.'], function(){
+	Route::get('/', [PenawaranController::class, 'index'])->name('index');
+	Route::get('search-produk', [PenawaranController::class, 'getProduk'])->name('search-produk');
+	Route::get('harsat', [PenawaranController::class, 'getHarsat'])->name('harsat');
+
+	Route::post('store', [PenawaranController::class, 'store'])->name('store');
+});
 
 Route::middleware([EnsureSessionIsValid::class])->group(function () {
     Route::get('/', function () {
