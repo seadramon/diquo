@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Pat;
 use App\Models\Personal;
-use App\Models\PricelistAngkutanD;
 use App\Models\Region;
-use App\Models\Views\VMasterProduk;
+use App\Models\VMasterProduk;
 
+use App\Models\Quotation;
+use App\Models\QuotationProduk;
+use App\Models\PricelistAngkutanD;
 use DB;
 
 class PenawaranController extends Controller
@@ -16,9 +18,11 @@ class PenawaranController extends Controller
     //
     public function index(Request $request)
     {
-    	$lokasi = Region::get()
+    	$lokasi = Region::select('propinsi_name')
+    		->groupBy('propinsi_name')
+    		->get()
             ->mapWithKeys(function($item){
-                return [$item->kd_region => $item->propinsi_name];
+                return [$item->propinsi_name => $item->propinsi_name];
             })
             ->all();
 
@@ -67,33 +71,74 @@ class PenawaranController extends Controller
 
         $produk = [];
 
+        $pricelist = $this->getHarga();
+
     	return view('pages.penawaran.index', compact('lokasi', 
     		'kondisi', 
     		'pic', 
     		'sbu', 
     		'jnsAngkutan', 
     		'pabrik',
-    		'produk'));
+    		'produk',
+    		'pricelist'));
     }
 
     public function store(Request $request)
     {
-    	dd($request->All());
     	try {
-            $data = StudentKlass::where('klass_id', $request->klass_id)->forceDelete();
+    		DB::beginTransaction();
 
-            foreach ($request->students as $row) {
-                $studentclass = new StudentKlass;
+    		$main = $request['maindata'];
+            $data = new Quotation;
 
-                $studentclass->student_id = $row['id'];
-                $studentclass->klass_id = $request->klass_id;
+            $data->no_surat = $main['no_surat'];
+		  	$data->nama_pelanggan = $main['nama_pelanggan'];
+		  	$data->nama_perusahaan = $main['nama_perusahaan'];
+		  	$data->no_hp = $main['no_hp'];
+		  	$data->email = $main['email'];
+		  	$data->nama_proyek = $main['nama_proyek'];
+		  	$data->lokasi_proyek = $main['lokasi'];
+		  	$data->kondisi_pengiriman = $main['kondisi'];
+		  	$data->pic = $main['pic'];
+		  	$data->sbu = $main['sbu'];
+		  	// angkutan
+		  	$data->kd_material = isset($main['kd_material'])?$main['kd_material']:null;
+		  	$data->ket_material = isset($main['ket_material'])?$main['ket_material']:null;
+		  	$data->kd_pabrik = isset($main['kd_pabrik'])?$main['kd_pabrik']:null;
+		  	$data->jarak = isset($main['jarak'])?$main['jarak']:null;
+		  	$data->harga_angkutan = isset($main['harga_angkutan'])?$main['harga_angkutan']:0;
+		  	// index
+		  	$data->idx_cad_hpp = $main['idx_cad_hpp'];
+		  	$data->idx_cad_transportasi = $main['idx_cad_transportasi'];
+		  	$data->idx_hpju = $main['idx_hpju'];
+		  	// biaya
+		  	$data->biaya_pelaksanaan = $main['biaya_pelaksanaan'];
 
-                $studentclass->save();
-            }
+		  	$data->save();
+		  	$id = $data->id;
+
+		  	if (count($request['maindata']['produk']) > 0) {
+		  		$details = $request['maindata']['produk'];
+
+	            foreach ($details as $row) {
+	                $produk = new QuotationProduk;
+
+	                $produk->quotation_id = $id;
+	                $produk->sbu = $row['sbu'];
+	                $produk->kd_produk = $row['kd_produk'];
+	                $produk->tipe_produk = $row['tipe_produk'];
+	                $produk->harsat_produk = $row['harsat'];
+
+	                $produk->save();
+	            }
+		  	}
+
+            DB::commit();
             
             return response()->json(['result' => 'success']);
         } catch (Exception $e) {            
-            Log::error('Error - Save data Student Class '.$e->getMessage());
+        	DB::rollback();
+            Log::error('Error - Gagal simpan data Penawaran '.$e->getMessage());
 
             return response()->json(['result' => 'failed']);
         }
@@ -141,6 +186,13 @@ class PenawaranController extends Controller
     	$data = collect(
     		DB::select($sql, $params)
     	)->first();
+
+    	return $data;
+    }
+
+    public function getHarga()
+    {
+    	$data = PricelistAngkutanD::with(['pad2', 'angkutan'])->get();
 
     	return $data;
     }

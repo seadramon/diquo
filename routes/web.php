@@ -42,6 +42,7 @@ Route::group(['prefix' => '/penawaran', 'as' => 'penawaran.'], function(){
 	Route::get('/', [PenawaranController::class, 'index'])->name('index');
 	Route::get('search-produk', [PenawaranController::class, 'getProduk'])->name('search-produk');
 	Route::get('harsat', [PenawaranController::class, 'getHarsat'])->name('harsat');
+	Route::get('harga', [PenawaranController::class, 'getHarga'])->name('harga');
 
 	Route::post('store', [PenawaranController::class, 'store'])->name('store');
 });

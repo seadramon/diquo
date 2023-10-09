@@ -35,32 +35,32 @@
                         <div class="row">
                             <div class="form-group mb-3 col-lg-12">
                                 <label class="form-label">Nomor Surat</label>
-                                <input type="text" name="no_surat" id="no_surat" class="form-control no_surat w-50">
+                                <input type="text" v-model="data.no_surat" name="no_surat" id="no_surat" class="form-control no_surat w-50">
                             </div>
 
                             <div class="form-group mb-3 col-lg-6">
                                 <label class="form-label">Nama Pelanggan</label>
-                                <input type="text" name="nama" class="form-control" id="nama">
+                                <input type="text" v-model="data.nama_pelanggan" name="nama_pelanggan" class="form-control" id="nama_pelanggan">
                             </div>
 
                             <div class="form-group mb-3 col-lg-6">
                                 <label class="form-label">Nama Perusahaan</label>
-                                <input type="text" name="company" class="form-control" id="company">
+                                <input type="text" v-model="data.nama_perusahaan" name="nama_perusahaan" class="form-control" id="nama_perusahaan">
                             </div>
 
                             <div class="form-group mb-3 col-lg-6">
                                 <label class="form-label">Nomor HP</label>
-                                <input type="text" name="no_hp" class="form-control" id="no_hp">
+                                <input type="text" v-model="data.no_hp" name="no_hp" class="form-control" id="no_hp">
                             </div>
 
                             <div class="form-group mb-3 col-lg-6">
                                 <label class="form-label">Email</label>
-                                <input type="text" name="email" class="form-control" id="email">
+                                <input type="text" v-model="data.email" name="email" class="form-control" id="email">
                             </div>
 
                             <div class="form-group mb-3 col-lg-12">
                                 <label class="form-label">Nama Proyek</label>
-                                <input type="text" name="" name="email" class="form-control" id="email">
+                                <input type="text" v-model="data.nama_proyek" name="" name="email" class="form-control" id="email">
                             </div>
 
                             <div class="form-group mb-3 col-lg-6">
@@ -165,22 +165,29 @@
                     <div class="card-body">
                         <div class="form-group mb-3 col-lg-12">
                             <label class="form-label">Jenis Angkutan</label>
-                            {!! Form::select('jenis_angkutan', $jnsAngkutan, null, ['class'=>'form-control form-select-solid', 'data-control'=>'select2', 'id'=>'jenis_angkutan']) !!}
+                            <select class="form-control" id="jenis_angkutan" v-model="data.kd_material">
+                                <option  v-for="(row,idx) in dropdown.jenis_angkutan" :value="idx + '#'  + row">@{{ row }}</option>
+                            </select>
                         </div>
 
                         <div class="form-group mb-3 col-lg-12">
                             <label class="form-label">Pabrik</label>
-                            <input type="text" name="tipe_produk" id="tipe_produk" class="form-control tipe_produk">
+                            <select class="form-control" id="pabrik-angkutan">
+                                <option  v-for="(row,idx) in dropdown.pabrik" :value="idx + '#'  + row">@{{ row }}</option>
+                            </select>
                         </div>
 
                         <div class="form-group mb-3 col-lg-12">
                             <label class="form-label">Jarak</label>
-                            <input type="text" name="volume" id="volume" class="form-control volume">
+                            <input type="text" v-model="data.jarak" name="data.jarak" id="jarak" class="form-control jarak">
                         </div>
 
-                        <div class="form-group mb-3 col-lg-12">
+                        <div class="form-group mb-3 col-lg-8">
                             <label class="form-label">Harga Angkutan</label>
-                            <input type="text" name="harga_angkutan" id="harga_angkutan" class="form-control">
+                            <input type="text" v-model="data.harga_angkutan" name="harga_angkutan" id="harga_angkutan" class="form-control">
+                        </div>
+                        <div class="form-group mb-3 col-lg-4">
+                            <a class="btn btn-primary" href="javascript:void(0);" @click.prevent="showPrice()" data-bs-toggle="modal" data-bs-target="#modal_view_price">Lihat Harga</a>
                         </div>
                     </div>
                 </div>
@@ -194,17 +201,17 @@
                     <div class="card-body">
                         <div class="form-group mb-3 col-lg-12">
                             <label class="form-label">Indeks Cadangan HPP</label>
-                            <input type="number" name="index_cadangan_hpp" id="index_cadangan_hpp" class="form-control index_cadangan_hpp">
+                            <input type="number" v-model="data.idx_cad_hpp" name="idx_cad_hpp" id="idx_cad_hpp" class="form-control">
                         </div>
 
                         <div class="form-group mb-3 col-lg-12">
                             <label class="form-label">Indeks Cadangan Transportasi</label>
-                            <input type="number" name="index_cadangan_transportasi" id="index_cadangan_transportasi" class="form-control index_cadangan_hpp">
+                            <input type="number" v-model="data.idx_cad_transportasi" name="idx_cad_transportasi" id="idx_cad_transportasi" class="form-control">
                         </div>
 
                         <div class="form-group mb-3 col-lg-12">
                             <label class="form-label">Indeks HPJu</label>
-                            <input type="number" name="index_hpju" id="index_hpju" class="form-control index_cadangan_hpp">
+                            <input type="number" v-model="data.idx_hpju" name="idx_hpju" id="idx_hpju" class="form-control">
                         </div>
                     </div>
                 </div>
@@ -218,7 +225,7 @@
                     <div class="card-body">
                         <div class="form-group mb-3 col-lg-12">
                             <label class="form-label">Total</label>
-                            <input type="number" name="total" id="total" class="form-control total">
+                            <input type="number" name="total" v-model="data.biaya_pelaksanaan" id="total" class="form-control total">
                         </div>
 
                         <div class="card-footer" style="text-align: right;">
@@ -235,6 +242,60 @@
             </form>
         </div>
         <!--end::Col-->
+
+        <!--begin::Modal - View Users-->
+        <div class="modal fade" id="modal_view_price" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog  modal-dialog-scrollable mw-650px">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">List Harga</h5>                        
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <table class="table table-row-bordered gy-5" width="100%">
+                                <thead>
+                                    <tr class="fw-semibold fs-6">
+                                        <th width="40%">&nbsp;Angkutan</th>
+                                        <th width="20%">Range</th>
+                                        <th width="20%">Harga Pusat</th>
+                                        <th width="20%">Harga Final</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(row, idx) in pricelist">
+                                        <td>
+                                            &nbsp;@{{ row.angkutan.spesifikasi }}
+                                        </td>
+                                        <td>
+                                            <template v-for="pad2, idx_pad in row.pad2">
+                                                &bull; @{{ pad2.range_min }} - @{{ pad2.range_max }} <br>
+                                            </template>
+                                        </td>
+                                        <td>
+                                            <template v-for="pad2, idx_pad in row.pad2">
+                                                &bull; @{{ pad2.h_pusat }} <br>
+                                            </template>
+                                        </td>
+                                        <td>
+                                            <template v-for="pad2, idx_pad in row.pad2">
+                                                &bull; @{{ pad2.h_final }} <br>
+                                            </template>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="text-muted" v-if="pricelist.length < 1">
+                                        <td colspan="7">&nbsp;Produk Kosong</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <!--end::Row-->
 </div>
@@ -277,6 +338,12 @@
 function initialState (){
     return {
         data: {
+            no_surat:'',
+            nama_pelanggan:'',
+            nama_perusahaan:'',
+            no_hp:'',
+            email:'',
+            nama_proyek:'',
             lokasi: '',
             kondisi: '',
             pic: '',
@@ -288,6 +355,15 @@ function initialState (){
             ket_pabrik: '',
             volume:'',
             harsat:'',
+            kd_material:'',
+            ket_material:'',
+            kd_pabrik:'',
+            jarak:'',
+            harga_angkutan:'',
+            idx_cad_hpp:'',
+            idx_cad_transportasi:'',
+            idx_hpju:'',
+            biaya_pelaksanaan:'',
             produk: {!! json_encode($produk) !!}
         },
         dropdown: {
@@ -296,7 +372,9 @@ function initialState (){
             pic : {!! json_encode($pic) !!},
             sbu : {!! json_encode($sbu) !!},
             pabrik : {!! json_encode($pabrik) !!},
+            jenis_angkutan: {!! json_encode($jnsAngkutan) !!}
         },
+        pricelist: {!! json_encode($pricelist) !!},
         btnAddProduct: 'Tambah Produk',
         errors: []
     }
@@ -343,6 +421,21 @@ let app = new Vue({
                 let arrpabrik = this.value.split("#")
                 app.data.pabrik = arrpabrik[0]
                 app.data.ket_pabrik = arrpabrik[1]
+            })
+
+            $("#jenis_angkutan").select2({
+                placeholder: 'Pilih Jenis Angkutan'
+            }).on('change', function () {
+                let arrmaterial = this.value.split("#")
+                app.data.kd_material = arrmaterial[0]
+                app.data.ket_material = arrmaterial[1]
+            })
+
+            $("#pabrik-angkutan").select2({
+                placeholder: 'Pilih Pabrik'
+            }).on('change', function () {
+                let arrpabrik = this.value.split("#")
+                app.data.kd_pabrik = arrpabrik[0]
             })
 
             $('#tipe_produk').select2({
@@ -408,6 +501,9 @@ let app = new Vue({
         },
         removeProduk(idx) {
             app.data.produk.splice(idx, 1)
+        },
+        showPrice() {
+
         },
         onSubmit() {
             $(".indicator-label").hide()

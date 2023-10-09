@@ -28,7 +28,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Sanctum::usePersonalAccessTokenModel(PersonalAccessToken::class);
+        /*Sanctum::usePersonalAccessTokenModel(PersonalAccessToken::class);
         View::composer('layout.layout2', function($view)
         {
             if(Auth::check()){
@@ -75,7 +75,7 @@ class AppServiceProvider extends ServiceProvider
                 }
             }
             $view->with('menus', $generatedMenu);
-        });
+        });*/
     }
 
     private function menu0($menu)
