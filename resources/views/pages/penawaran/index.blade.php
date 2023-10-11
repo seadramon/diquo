@@ -113,13 +113,6 @@
                         </div>
 
                         <div class="form-group mb-3 col-lg-6">
-                            <label class="form-label">Pabrik</label>
-                            <select class="form-control" id="pabrik" v-model="data.pabrik">
-                                <option  v-for="(row,idx) in dropdown.pabrik" :value="idx + '#'  + row">@{{ row }}</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group mb-3 col-lg-6">
                             <button class="btn btn-success" @click.prevent="addProduk">@{{ btnAddProduct }}</button>
                         </div>
 
@@ -144,7 +137,7 @@
                                     <td>@{{ row.ket_harsat }}</td>
                                     <td>@{{ row.ket_total }}</td>
                                     <td>
-                                        <a href="javascript:void(0)" style="color: red;" @click.prevent="removeProduk(idx)">Hapus</a>
+                                        <a href="javascript:void(0)" style="color: red;" @click.prevent="removeProduk(idx)">Hapus</a>&nbsp;
                                     </td>
                                 </tr>
 
@@ -182,12 +175,12 @@
                             <input type="text" v-model="data.jarak" name="data.jarak" id="jarak" class="form-control jarak">
                         </div>
 
-                        <div class="form-group mb-3 col-lg-8">
+                        <div class="form-group mb-3 col-lg-7 ">
                             <label class="form-label">Harga Angkutan</label>
-                            <input type="text" v-model="data.harga_angkutan" name="harga_angkutan" id="harga_angkutan" class="form-control">
+                            <input type="text" readonly v-model="data.harga_angkutan" name="harga_angkutan" id="harga_angkutan" class="form-control form-control-solid">
                         </div>
-                        <div class="form-group mb-3 col-lg-4">
-                            <a class="btn btn-primary" href="javascript:void(0);" @click.prevent="showPrice()" data-bs-toggle="modal" data-bs-target="#modal_view_price">Lihat Harga</a>
+                        <div class="mb-3 col-lg-5">
+                            <a class="btn btn-primary" @click.prevent="showPrice()">@{{ btnLihatHarga }}</a>
                         </div>
                     </div>
                 </div>
@@ -242,60 +235,6 @@
             </form>
         </div>
         <!--end::Col-->
-
-        <!--begin::Modal - View Users-->
-        <div class="modal fade" id="modal_view_price" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog  modal-dialog-scrollable mw-650px">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">List Harga</h5>                        
-                    </div>
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <table class="table table-row-bordered gy-5" width="100%">
-                                <thead>
-                                    <tr class="fw-semibold fs-6">
-                                        <th width="40%">&nbsp;Angkutan</th>
-                                        <th width="20%">Range</th>
-                                        <th width="20%">Harga Pusat</th>
-                                        <th width="20%">Harga Final</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="(row, idx) in pricelist">
-                                        <td>
-                                            &nbsp;@{{ row.angkutan.spesifikasi }}
-                                        </td>
-                                        <td>
-                                            <template v-for="pad2, idx_pad in row.pad2">
-                                                &bull; @{{ pad2.range_min }} - @{{ pad2.range_max }} <br>
-                                            </template>
-                                        </td>
-                                        <td>
-                                            <template v-for="pad2, idx_pad in row.pad2">
-                                                &bull; @{{ pad2.h_pusat }} <br>
-                                            </template>
-                                        </td>
-                                        <td>
-                                            <template v-for="pad2, idx_pad in row.pad2">
-                                                &bull; @{{ pad2.h_final }} <br>
-                                            </template>
-                                        </td>
-                                    </tr>
-
-                                    <tr class="text-muted" v-if="pricelist.length < 1">
-                                        <td colspan="7">&nbsp;Produk Kosong</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
     <!--end::Row-->
 </div>
@@ -376,6 +315,8 @@ function initialState (){
         },
         pricelist: {!! json_encode($pricelist) !!},
         btnAddProduct: 'Tambah Produk',
+        btnLihatHarga: 'Lihat Harga',
+        select_tipe_produk: '',
         errors: []
     }
 }
@@ -465,15 +406,21 @@ let app = new Vue({
                         };
                     },
                 }
-            }).on('change', function () {
-                let arrtipe = this.value.split("#")
-                app.data.kd_produk = arrtipe[0]
-                app.data.tipe_produk = arrtipe[1]
             })
+
+            $("#tipe_produk").on("select2:select", function (e) { 
+                app.data.select_tipe_produk = $(e.currentTarget).val();
+            });
         },
         addProduk: function() {
             let harsat = 0
             app.btnAddProduct = 'Menambahkan...'
+
+            let arrtipe = app.data.select_tipe_produk.split("#")
+            app.data.kd_produk = arrtipe[0]
+            app.data.tipe_produk = arrtipe[1]
+
+            let tipe_produk = app.data.tipe_produk
 
             axios.get(
                 "{{ route('penawaran.harsat') }}" + "?kd_produk=" + app.data.kd_produk + "&pat=" + app.data.pabrik
@@ -486,7 +433,7 @@ let app = new Vue({
                     sbu: app.data.sbu,
                     ket_sbu: app.data.ket_sbu,
                     kd_produk: app.data.kd_produk,
-                    tipe_produk: app.data.tipe_produk,
+                    tipe_produk: tipe_produk,
                     volume: app.data.volume,
                     harsat: res.nilai_hpp,
                     ket_harsat: 'Rp. ' + res.nilai_hpp,
@@ -503,7 +450,17 @@ let app = new Vue({
             app.data.produk.splice(idx, 1)
         },
         showPrice() {
+            app.btnLihatHarga = "Please wait..."
+            axios.get(
+                "{{ route('penawaran.harga') }}"
+            ).then(response => {
+                var res = response.data
 
+                if (res.result == 'success') {
+                    app.btnLihatHarga = "Lihat Harga"
+                    app.data.harga_angkutan = res.harga
+                }
+            })
         },
         onSubmit() {
             $(".indicator-label").hide()
@@ -532,6 +489,14 @@ let app = new Vue({
 
                 flasher.error("Oops! Something went wrong!")
             })
+            .finally(() => {
+                setTimeout(() => {
+                    this.reset()
+                }, 2000)
+            })
+        },
+        reset() {
+            Object.assign(this.$data, initialState());
         }
     }
 })

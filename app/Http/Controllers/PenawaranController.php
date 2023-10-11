@@ -192,8 +192,6 @@ class PenawaranController extends Controller
 
     public function getHarga()
     {
-    	$data = PricelistAngkutanD::with(['pad2', 'angkutan'])->get();
-
-    	return $data;
+    	return response()->json(['result' => 'success', 'harga' => '100000']);
     }
 }
