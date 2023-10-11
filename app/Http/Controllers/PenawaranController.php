@@ -11,7 +11,7 @@ use App\Models\VMasterProduk;
 use App\Models\Quotation;
 use App\Models\QuotationProduk;
 use App\Models\PricelistAngkutanD;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class PenawaranController extends Controller
 {
@@ -151,7 +151,7 @@ class PenawaranController extends Controller
     	$result = null;
 
     	if ($sbu) {
-	    	$data = VMasterProduk::select('kd_produk', 'tipe')
+	    	$data = VMasterProduk::select('kd_produk', DB::raw("KD_PRODUK || ' - ' || TIPE || ' [' || (CASE WHEN STD_NONSTD = 'S' THEN 'STD' ELSE 'NONSTD' END) || ']' as tipe"))
 	    		->where('std_nonstd', 'S')
 	    		->where('kd_sbu', $sbu)
 	    		->where('aktif', 'Y');
