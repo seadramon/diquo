@@ -123,7 +123,7 @@
                                     <th width="40%">SBU</th>
                                     <th width="20%">Tipe Produk</th>
                                     <th width="5%">Volume</th>
-                                    <th width="10%">Harsat</th>
+                                    <th width="10%">HPP</th>
                                     <th width="10%">Total</th>
                                     <th width="5%">Aksi</th>
                                 </tr>

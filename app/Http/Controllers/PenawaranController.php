@@ -18,11 +18,11 @@ class PenawaranController extends Controller
     //
     public function index(Request $request)
     {
-    	$lokasi = Region::select('propinsi_name')
-    		->groupBy('propinsi_name')
+    	$lokasi = Region::select('kabupaten_name')
+    		->groupBy('kabupaten_name')
     		->get()
             ->mapWithKeys(function($item){
-                return [$item->propinsi_name => $item->propinsi_name];
+                return [$item->kabupaten_name => $item->kabupaten_name];
             })
             ->all();
 
