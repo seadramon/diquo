@@ -19,6 +19,7 @@ use App\Http\Controllers\Verifikasi\ArmadaController as VerifikasiArmadaControll
 use App\Http\Controllers\LoginVendorController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PermintaanPenawaranController;
 use App\Http\Controllers\Report\EvaluasiVendorController;
 use App\Http\Controllers\Report\MonitoringDistribusiController;
 use App\Http\Middleware\EnsureSessionIsValid;
@@ -45,6 +46,14 @@ Route::group(['prefix' => '/penawaran', 'as' => 'penawaran.'], function(){
 	Route::get('harga', [PenawaranController::class, 'getHarga'])->name('harga');
 
 	Route::post('store', [PenawaranController::class, 'store'])->name('store');
+});
+
+Route::group(['prefix' => '/permintaan-penawaran', 'as' => 'permintaan-penawaran.'], function(){
+	Route::post('/destroy', [PermintaanPenawaranController::class, 'destroy'])->name('destroy');
+	Route::get('/data', [PermintaanPenawaranController::class, 'data'])->name('data');
+	Route::resource('/',  PermintaanPenawaranController::class)->except([
+		'show', 'destroy', 'edit'
+	])->parameters(['' => 'permintaan-penawaran']);
 });
 
 Route::middleware([EnsureSessionIsValid::class])->group(function () {
