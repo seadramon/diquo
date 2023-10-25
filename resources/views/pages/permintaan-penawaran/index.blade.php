@@ -2,7 +2,7 @@
 @section('page-title')
 <!--begin::Page title-->
 <div class="page-title d-flex justify-content-center flex-column me-5">
-    <h1 class="d-flex flex-column text-dark fw-bold fs-3 mb-0">Driver</h1>
+    <h1 class="d-flex flex-column text-dark fw-bold fs-3 mb-0">Permintaan Penawaran</h1>
 </div>
 <!--end::Page title-->
 @endsection
@@ -15,9 +15,9 @@
         <div class="col-12 mb-md-5 mb-xl-10">
             <div class="card shadow-sm">
                 <div class="card-header">
-                    <h3 class="card-title">List Driver</h3>
+                    <h3 class="card-title">List Permintaan Penawaran</h3>
                     <div class="card-toolbar">
-                        <a href="{{route('master-driver.create')}}" class="btn btn-light-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Tambah Data</a>
+                        <a href="{{route('permintaan-penawaran.create')}}" class="btn btn-light-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Tambah Data</a>
                     </div>
                 </div>
 
@@ -25,15 +25,10 @@
                     <table id="tabel_master_driver" class="table table-row-bordered gy-5" style="vertical-align: middle;">
                         <thead>
                             <tr class="fw-semibold fs-6 text-muted">
-                                <th>Nama</th>
-                                <th>Usia</th>
-                                <th>Hp</th>
-                                <th>Nopol</th>
-                                <th>SIM</th>
-                                <th>SIM Expired</th>
-                                <th>Masa Kerja</th>
-                                <th>Status</th>
-                                <th>Menu</th>
+                                <th>Nama Proyek</th>
+                                <th>Nama Pelanggan</th>
+                                <th>Request Date</th>
+                                <th>PIC</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -98,17 +93,12 @@
 	            serverSide: true,
 	            order: [[0, 'desc']],
 	            stateSave: true,
-	            ajax: "{{ route('master-driver.data') }}",
+	            ajax: "{{ route('permintaan-penawaran.data') }}",
 	            columns: [
-	                {data: 'nama', name: 'nama', defaultContent: '-'},
-	                {data: 'tgl_lahir', name: 'tgl_lahir', defaultContent: '-'},
-	                {data: 'no_hp', name: 'no_hp', defaultContent: '-'},
-	                {data: 'armada.nopol', name: 'armada.nopol', defaultContent: '-'},
-	                {data: 'sim_jenis', name: 'sim_jenis', defaultContent: '-'},
-	                {data: 'sim_expired', name: 'sim_expired', defaultContent: '-'},
-	                {data: 'tgl_bergabung', name: 'tgl_bergabung', defaultContent: '-'},
-	                {data: 'status_label', name: 'status', defaultContent: '-'},
-	                {data: 'menu', orderable: false, searchable: false}
+	                {data: 'nama_proyek', name: 'nama_proyek', defaultContent: '-'},
+	                {data: 'nama_pelanggan', name: 'nama_pelanggan', defaultContent: '-'},
+	                {data: 'request_date', name: 'request_date', defaultContent: '-'},
+	                {data: 'pic', name: 'pic', defaultContent: '-'},
 	            ],
 	        });
 
@@ -126,26 +116,6 @@
 	// On document ready
 	KTUtil.onDOMContentLoaded(function () {
 	    KTDatatablesServerSide.init();
-	});
-
-	$('body').on('click', '.delete', function () {
-		if (confirm("Delete Record?") == true) {
-			var id = $(this).data('id');
-
-			// ajax
-			$.ajax({
-				type:"post",
-				url: "{{ url('master-driver/destroy') }}",
-				data: {id : id, _token: "{{ csrf_token() }}"},
-				success: function(res){
-					if (res.result == 'success') {
-						flasher.success("Data telah berhasil dihapus!");
-
-						$('#tabel_master_driver').DataTable().ajax.url("{{ route('master-driver.data') }}").load();
-					}
-				}
-			});
-		}
 	});
 </script>
 @endsection
