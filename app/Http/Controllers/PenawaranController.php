@@ -12,11 +12,58 @@ use App\Models\Quotation;
 use App\Models\QuotationProduk;
 use App\Models\PricelistAngkutanD;
 use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\Facades\DataTables;
 
 class PenawaranController extends Controller
 {
-    //
-    public function index(Request $request)
+    public function index(){
+        return view('pages.penawaran.index');
+    }
+
+    public function data()
+    {
+        $query = Quotation::select('*')->orderBy('created_at', 'desc');
+
+        return DataTables::eloquent($query)
+            ->addColumn('menu', function ($model) {
+                $column = '<div class="btn-group">
+                            <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Menu
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="' . route('penawaran.show', $model->id) . '">Show</a></li>
+                        </ul>
+                        </div>';
+
+                return $column;
+            })
+            ->editColumn('created_at', function($model) {
+                $edit = date('d F Y', strtotime($model->created_at));
+
+                return $edit;
+            })
+            ->editColumn('sbu', function($model) {
+                $edit = !empty($model->getsbu)?$model->getsbu->singkatan2.' - '.$model->getsbu->nama_sbu:'-';
+
+                return $edit;
+            })
+            ->editColumn('pic', function($model) {
+                $edit = !empty($model->getpic)?$model->getpic->full_name:'-';
+
+                return $edit;
+            })
+            ->rawColumns(['menu'])
+            ->toJson();
+    }
+
+    public function show($id)
+    {
+        $data = Quotation::find($id);
+
+        return view('pages.penawaran.show', compact('data'));
+    }
+
+    public function create(Request $request)
     {
     	$lokasi = Region::select('kabupaten_name')
     		->groupBy('kabupaten_name')
@@ -73,7 +120,7 @@ class PenawaranController extends Controller
 
         $pricelist = $this->getHarga();
 
-    	return view('pages.penawaran.index', compact('lokasi', 
+    	return view('pages.penawaran.create', compact('lokasi', 
     		'kondisi', 
     		'pic', 
     		'sbu', 
@@ -128,6 +175,8 @@ class PenawaranController extends Controller
 	                $produk->kd_produk = $row['kd_produk'];
 	                $produk->tipe_produk = $row['tipe_produk'];
 	                $produk->harsat_produk = $row['harsat'];
+                    $produk->volume = $row['volume'];
+                    $produk->total = $row['total'];
 
 	                $produk->save();
 	            }

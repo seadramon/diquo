@@ -41,9 +41,12 @@ use App\Models\User;
 */
 Route::group(['prefix' => '/penawaran', 'as' => 'penawaran.'], function(){
 	Route::get('/', [PenawaranController::class, 'index'])->name('index');
+	Route::get('/data', [PenawaranController::class, 'data'])->name('data');
+	Route::get('create', [PenawaranController::class, 'create'])->name('create');
 	Route::get('search-produk', [PenawaranController::class, 'getProduk'])->name('search-produk');
 	Route::get('harsat', [PenawaranController::class, 'getHarsat'])->name('harsat');
 	Route::get('harga', [PenawaranController::class, 'getHarga'])->name('harga');
+	Route::get('show/{id}', [PenawaranController::class, 'show'])->name('show');
 
 	Route::post('store', [PenawaranController::class, 'store'])->name('store');
 });
