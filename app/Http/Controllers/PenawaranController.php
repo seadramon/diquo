@@ -11,6 +11,7 @@ use App\Models\VMasterProduk;
 use App\Models\Quotation;
 use App\Models\QuotationProduk;
 use App\Models\PricelistAngkutanD;
+use App\Models\QuotationRequest;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -65,6 +66,10 @@ class PenawaranController extends Controller
 
     public function create(Request $request)
     {
+		$pemintaan = null;
+		if($request->has('request_id')){
+			$permintaan = QuotationRequest::find($request->request_id);
+		}
     	$lokasi = Region::select('kabupaten_name')
     		->groupBy('kabupaten_name')
     		->get()
@@ -127,6 +132,7 @@ class PenawaranController extends Controller
     		'jnsAngkutan', 
     		'pabrik',
     		'produk',
+    		'permintaan',
     		'pricelist'));
     }
 

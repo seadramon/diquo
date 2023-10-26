@@ -25,7 +25,26 @@ class PermintaanPenawaranController extends Controller
     {
         $query = QuotationRequest::select('*');
 
-        return DataTables::eloquent($query)->toJson();
+        return DataTables::eloquent($query)
+            ->editColumn('status', function ($model) {
+                if(in_array($model->status, [null, "baru"])){
+                    return "<span class=\"badge badge-light-info\">Baru</span>";
+                }
+            })
+            ->addColumn('menu', function ($model) {
+                $column = '<div class="btn-group">
+                            <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Menu
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="' . route('penawaran.create', ['request_id' => $model->id]) . '" target="_blank">Buat Penawaran</a></li>
+                        </ul>
+                        </div>';
+
+                return $column;
+            })
+            ->rawColumns(['menu', 'status'])
+            ->toJson();
     }
 
     public function create()
@@ -50,6 +69,7 @@ class PermintaanPenawaranController extends Controller
             $quoRequest->nama_pelanggan = $request->nama_pelanggan;
             $quoRequest->request_date = $request->request_date;
             $quoRequest->pic = $request->pic;
+            $quoRequest->status = "baru";
             
             $quoRequest->save();
 
