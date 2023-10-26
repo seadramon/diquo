@@ -66,7 +66,7 @@ class PenawaranController extends Controller
 
     public function create(Request $request)
     {
-		$pemintaan = null;
+		$permintaan = null;
 		if($request->has('request_id')){
 			$permintaan = QuotationRequest::find($request->request_id);
 		}
