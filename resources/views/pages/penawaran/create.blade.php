@@ -40,7 +40,7 @@
 
                             <div class="form-group mb-3 col-lg-6">
                                 <label class="form-label">Nama Pelanggan</label>
-                                <input type="text" v-model="data.nama_pelanggan" name="nama_pelanggan" class="form-control" id="nama_pelanggan" value="{{ $permintaan->nama_pelanggan ?? "" }}">
+                                <input type="text" v-model="data.nama_pelanggan" name="nama_pelanggan" class="form-control" id="nama_pelanggan">
                             </div>
 
                             <div class="form-group mb-3 col-lg-6">
@@ -60,7 +60,7 @@
 
                             <div class="form-group mb-3 col-lg-12">
                                 <label class="form-label">Nama Proyek</label>
-                                <input type="text" v-model="data.nama_proyek" name="" name="email" class="form-control" id="email" value="{{ $permintaan->nama_proyek ?? "" }}">
+                                <input type="text" v-model="data.nama_proyek" name="" name="nama_proyek" class="form-control" id="nama_proyek">
                             </div>
 
                             <div class="form-group mb-3 col-lg-6">
@@ -278,11 +278,11 @@ function initialState (){
     return {
         data: {
             no_surat:'',
-            nama_pelanggan:'',
+            nama_pelanggan:"{{ $permintaan->nama_pelanggan ?? "" }}",
             nama_perusahaan:'',
             no_hp:'',
             email:'',
-            nama_proyek:'',
+            nama_proyek:"{{ $permintaan->nama_proyek ?? "" }}",
             lokasi: '',
             kondisi: '',
             pic: '',
