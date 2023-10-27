@@ -35,7 +35,9 @@
                         <div class="row">
                             <div class="form-group mb-3 col-lg-12">
                                 <label class="form-label">Nomor Surat</label>
-                                <input type="text" v-model="data.no_surat" name="no_surat" id="no_surat" class="form-control no_surat w-50">
+                                <select class="form-control" id="no_surat" v-model="data.no_surat">
+                                    <option  v-for="(row,idx) in dropdown.no_surat" :value="idx">@{{ row }}</option>
+                                </select>
                             </div>
 
                             <div class="form-group mb-3 col-lg-6">
@@ -58,7 +60,7 @@
                                 <input type="text" v-model="data.email" name="email" class="form-control" id="email">
                             </div>
 
-                            <div class="form-group mb-3 col-lg-12">
+                            <div class="form-group mb-3 col-lg-6">
                                 <label class="form-label">Nama Proyek</label>
                                 <input type="text" v-model="data.nama_proyek" name="" name="nama_proyek" class="form-control" id="nama_proyek">
                             </div>
@@ -71,7 +73,6 @@
                             </div>
 
                             <div class="form-group mb-3 col-lg-6">
-                                @{{ data.kondisi }}
                                 <label class="form-label">Kondisi Pengiriman</label>
                                 <select class="form-control" id="kondisi" v-model="data.kondisi">
                                     <option  v-for="(row,idx) in dropdown.kondisi" :value="idx">@{{ row }}</option>
@@ -102,14 +103,24 @@
                     </div>
 
                     <div class="card-body">
-                        <div class="form-group mb-3 col-lg-12">
+                        <div class="form-group mb-3 col-lg-6">
+                            <label class="form-label">Jenis</label>
+                            <select class="form-control" id="tipe" v-model="data.tipe">
+                                <option  v-for="(row,idx) in dropdown.tipe" :value="idx">@{{ row }}</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-3 col-lg-6">
                             <label class="form-label">Tipe Produk</label>
                             <select class="form-control" name="tipe_produk" id="tipe_produk" v-model="data.tipe_produk"></select>
                         </div>
 
-                        <div class="form-group mb-3 col-lg-12">
+                        <div class="form-group mb-3 col-lg-6">
                             <label class="form-label">Volume</label>
-                            <input type="text" name="volume" id="volume" v-model="data.volume" class="form-control volume w-50">
+                            <input type="text" name="volume" id="volume" v-model="data.volume" class="form-control volume">
+                        </div>
+                        <div class="form-group mb-3 col-lg-6" v-show="data.tipe == 'NS'">
+                            <label class="form-label">Harga Satuan</label>
+                            <input type="text" name="harsat_manual" id="harsat_manual" v-model="data.harsat_manual" class="form-control harsat_manual">
                         </div>
 
                         <div class="form-group mb-3 col-lg-6">
@@ -285,6 +296,7 @@ function initialState (){
             nama_proyek:"{{ $permintaan->nama_proyek ?? "" }}",
             lokasi: '',
             kondisi: '',
+            tipe: '',
             pic: '',
             sbu: '',
             ket_sbu:'',
@@ -294,6 +306,7 @@ function initialState (){
             ket_pabrik: '',
             volume:'',
             harsat:'',
+            harsat_manual:'',
             kd_material:'',
             ket_material:'',
             kd_pabrik:'',
@@ -310,8 +323,10 @@ function initialState (){
             kondisi : {!! json_encode($kondisi) !!},
             pic : {!! json_encode($pic) !!},
             sbu : {!! json_encode($sbu) !!},
+            tipe : {!! json_encode($tipe) !!},
             pabrik : {!! json_encode($pabrik) !!},
-            jenis_angkutan: {!! json_encode($jnsAngkutan) !!}
+            jenis_angkutan: {!! json_encode($jnsAngkutan) !!},
+            no_surat: {!! json_encode($no_surat) !!}
         },
         pricelist: {!! json_encode($pricelist) !!},
         btnAddProduct: 'Tambah Produk',
@@ -340,6 +355,11 @@ let app = new Vue({
                 placeholder: 'Pilih Kondisi'
             }).on('change', function () {
                 app.data.kondisi = this.value;
+            })
+            $("#tipe").select2({
+                placeholder: 'Pilih Tipe'
+            }).on('change', function () {
+                app.data.tipe = this.value;
             })
 
             $("#pic").select2({
@@ -370,6 +390,11 @@ let app = new Vue({
                 let arrmaterial = this.value.split("#")
                 app.data.kd_material = arrmaterial[0]
                 app.data.ket_material = arrmaterial[1]
+            })
+            $("#no_surat").select2({
+                placeholder: 'Pilih No Surat'
+            }).on('change', function () {
+                app.data.no_surat = this.value
             })
 
             $("#pabrik-angkutan").select2({
@@ -414,6 +439,7 @@ let app = new Vue({
         },
         addProduk: function() {
             let harsat = 0
+            let total = 0
             app.btnAddProduct = 'Menambahkan...'
 
             let arrtipe = app.data.select_tipe_produk.split("#")
@@ -421,30 +447,39 @@ let app = new Vue({
             app.data.tipe_produk = arrtipe[1]
 
             let tipe_produk = app.data.tipe_produk
+            if(app.data.tipe == 'S'){
+                axios.get(
+                    "{{ route('penawaran.harsat') }}" + "?kd_produk=" + app.data.kd_produk + "&pat=" + app.data.pabrik
+                ).then(response => {
+                    harsat = response.data.nilai_hpp
+                    total = harsat * app.data.volume
+                })
+            }else{
+                harsat = app.data.harsat_manual
+                total = harsat * app.data.volume
+            }
+            
+            if(app.data.sbu == 'A' || app.data.sbu == 'F' || app.data.sbu == 'F'){
+                var satuan = 'pcs'
+            }else{
+                var satuan = 'meter'
+            }
+            let tmp = {
+                kd_produk : app.data.kd_produk,
+                sbu: app.data.sbu,
+                ket_sbu: app.data.ket_sbu,
+                kd_produk: app.data.kd_produk,
+                tipe_produk: tipe_produk,
+                volume: app.data.volume + ' ' + satuan,
+                harsat: harsat,
+                ket_harsat: 'Rp. ' + harsat,
+                total: total,
+                ket_total: 'Rp. ' + total
+            }
 
-            axios.get(
-                "{{ route('penawaran.harsat') }}" + "?kd_produk=" + app.data.kd_produk + "&pat=" + app.data.pabrik
-            ).then(response => {
-                var res = response.data
-                var total = res.nilai_hpp * app.data.volume
+            app.data.produk.push(tmp)
 
-                let tmp = {
-                    kd_produk : app.data.kd_produk,
-                    sbu: app.data.sbu,
-                    ket_sbu: app.data.ket_sbu,
-                    kd_produk: app.data.kd_produk,
-                    tipe_produk: tipe_produk,
-                    volume: app.data.volume,
-                    harsat: res.nilai_hpp,
-                    ket_harsat: 'Rp. ' + res.nilai_hpp,
-                    total: total,
-                    ket_total: 'Rp. ' + total
-                }
-
-                app.data.produk.push(tmp)
-
-                app.btnAddProduct = 'Tambah Produk'
-            })
+            app.btnAddProduct = 'Tambah Produk'
         },
         removeProduk(idx) {
             app.data.produk.splice(idx, 1)

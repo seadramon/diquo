@@ -12,6 +12,7 @@ use App\Models\Quotation;
 use App\Models\QuotationProduk;
 use App\Models\PricelistAngkutanD;
 use App\Models\QuotationRequest;
+use App\Models\TbSurat;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -83,6 +84,10 @@ class PenawaranController extends Controller
         	"loko" => 'loko',
         	"fot" => 'fot'
         ];
+        $tipe = [
+        	"S" => "Standard",
+        	"NS" => "Non Standard",
+        ];
 
         $pic = Personal::where('kd_pat', '1E')
         	->where('employee_id', 'not like', "TX%")
@@ -125,13 +130,24 @@ class PenawaranController extends Controller
 
         $pricelist = $this->getHarga();
 
+		$no_surat = TbSurat::where('no_surat', 'LIKE', 'PS.03.03%')
+			->where('kd_pat_pengirim', '1E')
+			->get()
+		// $no_surat = TbSurat::all()
+			->mapWithKeys(function($item){
+                return [$item->no_surat => $item->no_surat];
+            })
+            ->all();
+
     	return view('pages.penawaran.create', compact('lokasi', 
     		'kondisi', 
     		'pic', 
+    		'tipe', 
     		'sbu', 
     		'jnsAngkutan', 
     		'pabrik',
     		'produk',
+    		'no_surat',
     		'permintaan',
     		'pricelist'));
     }
