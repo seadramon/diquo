@@ -189,7 +189,7 @@
                     <div class="card-body">
                         <div class="form-group mb-3 col-lg-12">
                             <label class="form-label">Total</label>
-                            <input type="number" readonly name="total" value="{{ $data->biaya_pelaksanaan }}" id="total" class="form-control form-control-solid total">
+                            <input type="text" readonly name="total" value="{{ !empty($data->biaya_pelaksanaan)?number_format($data->biaya_pelaksanaan,0,',','.'):'' }}" id="total" class="form-control form-control-solid total">
                         </div>
 
                         <div class="card-footer" style="text-align: right;">

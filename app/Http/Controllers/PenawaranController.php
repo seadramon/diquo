@@ -165,7 +165,7 @@ class PenawaranController extends Controller
 		  	$data->idx_cad_transportasi = $main['idx_cad_transportasi'];
 		  	$data->idx_hpju = $main['idx_hpju'];
 		  	// biaya
-		  	$data->biaya_pelaksanaan = $main['biaya_pelaksanaan'];
+		  	$data->biaya_pelaksanaan = !empty($main['biaya_pelaksanaan'])?str_replace(".", "", $main['biaya_pelaksanaan']):0;
 
 		  	$data->save();
 		  	$id = $data->id;

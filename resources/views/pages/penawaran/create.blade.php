@@ -218,7 +218,7 @@
                     <div class="card-body">
                         <div class="form-group mb-3 col-lg-12">
                             <label class="form-label">Total</label>
-                            <input type="number" name="total" v-model="data.biaya_pelaksanaan" id="total" class="form-control total">
+                            <input type="text" name="total" v-model="data.biaya_pelaksanaan" id="total" class="form-control total currency">
                         </div>
 
                         <div class="card-footer" style="text-align: right;">
@@ -327,6 +327,11 @@ let app = new Vue({
     },
     mounted: function() {
         this.$nextTick(this.initSelect2);
+
+        $(".currency").keyup(function() {
+            var rp = formatRupiah(this.value);
+            $(this).val(rp);
+        })
     },
     methods: {
         initSelect2: function (e) {
