@@ -13,7 +13,9 @@ use App\Models\QuotationProduk;
 use App\Models\PricelistAngkutanD;
 use App\Models\QuotationRequest;
 use App\Models\TbSurat;
+use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\Facades\DataTables;
 
 class PenawaranController extends Controller
@@ -154,6 +156,7 @@ class PenawaranController extends Controller
 
     public function store(Request $request)
     {
+		return response()->json($request->all());
     	try {
     		DB::beginTransaction();
 
@@ -203,6 +206,10 @@ class PenawaranController extends Controller
 	                $produk->save();
 	            }
 		  	}
+
+			$permintaan = QuotationRequest::find($request->request_id);
+			$permintaan->status = 'selesai';
+			$permintaan->save();
 
             DB::commit();
             

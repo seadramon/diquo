@@ -61,6 +61,7 @@ class PermintaanPenawaranController extends Controller
                 'nama_proyek'   => 'required',
                 'nama_pelanggan'=> 'required',
                 'request_date'  => 'required',
+                'due_date'  => 'required',
                 'pic'           => 'required'
             ])->validate();
 
@@ -68,6 +69,7 @@ class PermintaanPenawaranController extends Controller
             $quoRequest->nama_proyek = $request->nama_proyek;
             $quoRequest->nama_pelanggan = $request->nama_pelanggan;
             $quoRequest->request_date = $request->request_date;
+            $quoRequest->due_date = $request->due_date;
             $quoRequest->pic = $request->pic;
             $quoRequest->status = "baru";
             

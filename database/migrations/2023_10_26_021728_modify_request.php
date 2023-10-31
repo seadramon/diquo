@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::table('quo_quotation_requests', function (Blueprint $table) {
             $table->string('status', 50)->nullable();
+            $table->date('due_date')->nullable();
         });
     }
 
@@ -26,7 +27,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('quo_quotation_requests', function (Blueprint $table) {
-            $table->dropColumn(['status']);
+            $table->dropColumn(['status', 'due_date']);
         });
     }
 };

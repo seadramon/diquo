@@ -28,6 +28,7 @@
                                 <th>Nama Proyek</th>
                                 <th>Nama Pelanggan</th>
                                 <th>Request Date</th>
+                                <th>Due Date</th>
                                 <th>PIC</th>
                                 <th>Status</th>
                                 <th>Menu</th>
@@ -100,6 +101,7 @@
 	                {data: 'nama_proyek', name: 'nama_proyek', defaultContent: '-'},
 	                {data: 'nama_pelanggan', name: 'nama_pelanggan', defaultContent: '-'},
 	                {data: 'request_date', name: 'request_date', defaultContent: '-'},
+	                {data: 'due_date', name: 'due_date', defaultContent: '-'},
 	                {data: 'pic', name: 'pic', defaultContent: '-'},
 	                {data: 'status', name: 'status', orderable: false, searchable: false, defaultContent: '-'},
 	                {data: 'menu', name: 'menu', orderable: false, searchable: false, defaultContent: '-'},

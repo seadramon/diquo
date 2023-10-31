@@ -37,21 +37,34 @@
                     @endif
 
                     <div class="row">
-                        <div class="fv-row form-group col-lg-6">
+                        <div class="fv-row form-group col-lg-6 mb-3">
                             <label class="form-label required">Nama Proyek</label>
                             {!! Form::text('nama_proyek', null, ['class'=>'form-control', 'id'=>'nama_proyek', 'autocomplete'=>'off', 'required']) !!}
                         </div>
 
-                        <div class="fv-row form-group col-lg-6">
+                        <div class="fv-row form-group col-lg-6 mb-3">
                             <label class="form-label required">Nama Pelanggan</label>
                             {!! Form::text('nama_pelanggan', null, ['class'=>'form-control', 'id'=>'nama_pelanggan', 'autocomplete'=>'off', 'required']) !!}
                         </div>
 
-                        <div class="form-group col-lg-6">
+                        <div class="form-group col-lg-6 mb-3">
                             <label class="form-label required">Request Date</label>
                             <div class="col-lg-12">
                                 <div class="input-group date">
                                     {!! Form::text('request_date', null, ['class'=>'form-control datepicker', 'id'=>'request_date', 'required']) !!}
+                                    <div class="input-group-append">
+                                        <span class="input-group-text" style="display: block">
+                                            <i class="la la-calendar-check-o"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6 mb-3">
+                            <label class="form-label required">Due Date</label>
+                            <div class="col-lg-12">
+                                <div class="input-group date">
+                                    {!! Form::text('due_date', null, ['class'=>'form-control datepicker', 'id'=>'due_date', 'required']) !!}
                                     <div class="input-group-append">
                                         <span class="input-group-text" style="display: block">
                                             <i class="la la-calendar-check-o"></i>

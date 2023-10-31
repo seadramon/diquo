@@ -116,11 +116,15 @@
 
                         <div class="form-group mb-3 col-lg-6">
                             <label class="form-label">Volume</label>
-                            <input type="text" name="volume" id="volume" v-model="data.volume" class="form-control volume">
+                            <input type="text" name="volume" id="volume" v-model="data.volume" class="form-control volume currency">
+                        </div>
+                        <div class="form-group mb-3 col-lg-6" v-show="data.tipe == 'NS'">
+                            <label class="form-label">Satuan</label>
+                            <input type="text" name="satuan" id="satuan" v-model="data.satuan" class="form-control satuan">
                         </div>
                         <div class="form-group mb-3 col-lg-6" v-show="data.tipe == 'NS'">
                             <label class="form-label">Harga Satuan</label>
-                            <input type="text" name="harsat_manual" id="harsat_manual" v-model="data.harsat_manual" class="form-control harsat_manual">
+                            <input type="text" name="harsat_manual" id="harsat_manual" v-model="data.harsat_manual" class="form-control harsat_manual currency">
                         </div>
 
                         <div class="form-group mb-3 col-lg-6">
@@ -131,9 +135,10 @@
                             <thead>
                                 <tr class="fw-semibold fs-6">
                                     <th width="10%">&nbsp;No Produk</th>
-                                    <th width="40%">SBU</th>
+                                    <th width="35%">SBU</th>
                                     <th width="20%">Tipe Produk</th>
                                     <th width="5%">Volume</th>
+                                    <th width="5%">Satuan</th>
                                     <th width="10%">HPP</th>
                                     <th width="10%">Total</th>
                                     <th width="5%">Aksi</th>
@@ -145,6 +150,7 @@
                                     <td>@{{ row.ket_sbu }}</td>
                                     <td>@{{ row.tipe_produk}}</td>
                                     <td>@{{ row.volume }}</td>
+                                    <td>@{{ row.satuan }}</td>
                                     <td>@{{ row.ket_harsat }}</td>
                                     <td>@{{ row.ket_total }}</td>
                                     <td>
@@ -152,8 +158,8 @@
                                     </td>
                                 </tr>
 
-                                <tr class="text-muted" v-if="data.produk.length < 1">
-                                    <td colspan="7">&nbsp;Produk Kosong</td>
+                                <tr class="text-dark-800 text-center" v-if="data.produk.length < 1">
+                                    <td colspan="8">&nbsp;Produk Kosong</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -205,17 +211,17 @@
                     <div class="card-body">
                         <div class="form-group mb-3 col-lg-12">
                             <label class="form-label">Indeks Cadangan HPP</label>
-                            <input type="number" v-model="data.idx_cad_hpp" name="idx_cad_hpp" id="idx_cad_hpp" class="form-control">
+                            <input type="number" v-model="data.idx_cad_hpp" name="idx_cad_hpp" id="idx_cad_hpp" class="form-control currency">
                         </div>
 
                         <div class="form-group mb-3 col-lg-12">
                             <label class="form-label">Indeks Cadangan Transportasi</label>
-                            <input type="number" v-model="data.idx_cad_transportasi" name="idx_cad_transportasi" id="idx_cad_transportasi" class="form-control">
+                            <input type="number" v-model="data.idx_cad_transportasi" name="idx_cad_transportasi" id="idx_cad_transportasi" class="form-control currency">
                         </div>
 
                         <div class="form-group mb-3 col-lg-12">
                             <label class="form-label">Indeks HPJu</label>
-                            <input type="number" v-model="data.idx_hpju" name="idx_hpju" id="idx_hpju" class="form-control">
+                            <input type="number" v-model="data.idx_hpju" name="idx_hpju" id="idx_hpju" class="form-control currency">
                         </div>
                     </div>
                 </div>
@@ -288,6 +294,7 @@
 function initialState (){
     return {
         data: {
+            request_id: "{{ $permintaan->id ?? "" }}",
             no_surat:'',
             nama_pelanggan:"{{ $permintaan->nama_pelanggan ?? "" }}",
             nama_perusahaan:'',
@@ -307,6 +314,7 @@ function initialState (){
             volume:'',
             harsat:'',
             harsat_manual:'',
+            satuan:'',
             kd_material:'',
             ket_material:'',
             kd_pabrik:'',
@@ -463,11 +471,13 @@ let app = new Vue({
                 harsat = app.data.harsat_manual
                 total = harsat * app.data.volume
             }
-            
             if(app.data.sbu == 'A' || app.data.sbu == 'F' || app.data.sbu == 'F'){
-                var satuan = 'pcs'
+                var satuan_ = 'pcs'
             }else{
-                var satuan = 'meter'
+                var satuan_ = 'meter'
+            }
+            if(app.data.tipe == 'NS'){
+                satuan_ = app.data.satuan
             }
             let tmp = {
                 kd_produk : app.data.kd_produk,
@@ -475,7 +485,9 @@ let app = new Vue({
                 ket_sbu: app.data.ket_sbu,
                 kd_produk: app.data.kd_produk,
                 tipe_produk: tipe_produk,
-                volume: app.data.volume + ' ' + satuan,
+                // volume: app.data.volume + ' ' + satuan_,
+                volume: app.data.volume,
+                satuan: satuan_,
                 harsat: harsat,
                 ket_harsat: 'Rp. ' + harsat,
                 total: total,
