@@ -57,6 +57,7 @@ Route::group(['prefix' => '/permintaan-penawaran', 'as' => 'permintaan-penawaran
 	Route::resource('/',  PermintaanPenawaranController::class)->except([
 		'show', 'destroy', 'edit'
 	])->parameters(['' => 'permintaan-penawaran']);
+	Route::get('/print/{id}', [PermintaanPenawaranController::class, 'cetak'])->name('print');
 });
 
 Route::middleware([EnsureSessionIsValid::class])->group(function () {

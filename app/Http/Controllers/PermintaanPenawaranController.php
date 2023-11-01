@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PermintaanPenawaranController extends Controller
 {
@@ -38,6 +39,7 @@ class PermintaanPenawaranController extends Controller
                         </button>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="' . route('penawaran.create', ['request_id' => $model->id]) . '" target="_blank">Buat Penawaran</a></li>
+                            <li><a class="dropdown-item" href="' . route('permintaan-penawaran.print', ['id' => $model->id]) . '" target="_blank">Cetak</a></li>
                         </ul>
                         </div>';
 
@@ -85,5 +87,17 @@ class PermintaanPenawaranController extends Controller
             $flasher->addError($e->getMessage());
             return redirect()->back();
         }
+    }
+
+    public function cetak($id)
+    {
+        // dd('test');
+        // return view('prints.permintaan-penawaran');
+        $pdf = Pdf::loadView('prints.permintaan-penawaran');
+
+        $filename = "Permintaan-Penawaran";
+
+        return $pdf->setPaper('a4', 'portrait')
+            ->stream($filename . '.pdf');
     }
 }
