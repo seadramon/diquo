@@ -17,6 +17,7 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\Facades\DataTables;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PenawaranController extends Controller
 {
@@ -36,6 +37,7 @@ class PenawaranController extends Controller
                         </button>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="' . route('penawaran.show', $model->id) . '">Show</a></li>
+							<li><a class="dropdown-item" href="' . route('penawaran.print', ['id' => $model->id]) . '" target="_blank">Cetak</a></li>
                         </ul>
                         </div>';
 
@@ -271,5 +273,16 @@ class PenawaranController extends Controller
     public function getHarga()
     {
     	return response()->json(['result' => 'success', 'harga' => '100000']);
+    }
+
+	public function cetak($id)
+    {
+        // dd('test');
+        $pdf = Pdf::loadView('prints.penawaran');
+
+        $filename = "Penawaran";
+
+        return $pdf->setPaper('a4', 'portrait')
+            ->stream($filename . '.pdf');
     }
 }

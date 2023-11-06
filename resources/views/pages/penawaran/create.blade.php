@@ -237,8 +237,22 @@
                             <label class="form-label">Total</label>
                             <input type="text" name="total" v-model="data.biaya_pelaksanaan" id="total" class="form-control total currency">
                         </div>
+                    </div>
+                </div>
+                <!-- Preview Total -->
+                <div class="card shadow-sm mb-3">
+                    {{-- <div class="card-header">
+                        <h3 class="card-title">Total Penawaran</h3>
+                    </div> --}}
+
+                    <div class="card-body">
+                        <div class="form-group mb-3 col-lg-12">
+                            <label class="form-label">Total Harga Penawaran</label>
+                            <input type="text" name="total_penawaran" v-model="data.total_penawaran" id="total_penawaran" class="form-control total_penawaran currency">
+                        </div>
 
                         <div class="card-footer" style="text-align: right;">
+                            <button class="btn btn-success mr-2" @click.prevent="calculateTotal">@{{ btnCalculateTotal }}</button>
                             <a href="{{ route('penawaran.index') }}" class="btn btn-light btn-active-light-primary me-2">Kembali</a>
                             
                             <button type="submit" data-kt-contacts-type="submit" class="btn btn-primary" @click.prevent="onSubmit()">
@@ -324,6 +338,7 @@ function initialState (){
             idx_cad_transportasi:'',
             idx_hpju:'',
             biaya_pelaksanaan:'',
+            total_penawaran:'',
             produk: {!! json_encode($produk) !!}
         },
         dropdown: {
@@ -339,6 +354,7 @@ function initialState (){
         pricelist: {!! json_encode($pricelist) !!},
         btnAddProduct: 'Tambah Produk',
         btnLihatHarga: 'Lihat Harga',
+        btnCalculateTotal: 'Hitung Total',
         select_tipe_produk: '',
         errors: []
     }
@@ -549,7 +565,28 @@ let app = new Vue({
         },
         reset() {
             Object.assign(this.$data, initialState());
-        }
+        },
+        calculateTotal: function() {
+            let total = 0
+            app.btnAddProduct = 'Menghitung...'
+            if(app.data.idx_cad_hpp != ""){
+                total += parseInt(app.data.idx_cad_hpp.replace(".", ""))
+            }
+            if(app.data.idx_cad_transportasi != ""){
+                total += parseInt(app.data.idx_cad_transportasi.replace(".", ""))
+            }
+            if(app.data.idx_hpju != ""){
+                total += parseInt(app.data.idx_hpju.replace(".", ""))
+            }
+            if(app.data.biaya_pelaksanaan != ""){
+                total += parseInt(app.data.biaya_pelaksanaan.replace(".", ""))
+            }
+            for (produk of app.data.produk) {
+                total += parseInt(produk.total)
+            }
+            app.data.total_penawaran = total
+            app.btnAddProduct = 'Hitung Total'
+        },
     }
 })
 </script>

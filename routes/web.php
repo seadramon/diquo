@@ -49,6 +49,7 @@ Route::group(['prefix' => '/penawaran', 'as' => 'penawaran.'], function(){
 	Route::get('show/{id}', [PenawaranController::class, 'show'])->name('show');
 
 	Route::post('store', [PenawaranController::class, 'store'])->name('store');
+	Route::get('/print/{id}', [PenawaranController::class, 'cetak'])->name('print');
 });
 
 Route::group(['prefix' => '/permintaan-penawaran', 'as' => 'permintaan-penawaran.'], function(){
@@ -57,7 +58,6 @@ Route::group(['prefix' => '/permintaan-penawaran', 'as' => 'permintaan-penawaran
 	Route::resource('/',  PermintaanPenawaranController::class)->except([
 		'show', 'destroy', 'edit'
 	])->parameters(['' => 'permintaan-penawaran']);
-	Route::get('/print/{id}', [PermintaanPenawaranController::class, 'cetak'])->name('print');
 });
 
 Route::middleware([EnsureSessionIsValid::class])->group(function () {
