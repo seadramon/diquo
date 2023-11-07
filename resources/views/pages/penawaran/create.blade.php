@@ -149,7 +149,7 @@
                                     <td>&nbsp;@{{ row.kd_produk }}</td>
                                     <td>@{{ row.ket_sbu }}</td>
                                     <td>@{{ row.tipe_produk}}</td>
-                                    <td>@{{ row.volume }}</td>
+                                    <td>@{{ row.ket_volume }}</td>
                                     <td>@{{ row.satuan }}</td>
                                     <td>@{{ row.ket_harsat }}</td>
                                     <td>@{{ row.ket_total }}</td>
@@ -367,9 +367,20 @@ let app = new Vue({
     mounted: function() {
         this.$nextTick(this.initSelect2);
 
-        $(".currency").keyup(function() {
-            var rp = formatRupiah(this.value);
-            $(this).val(rp);
+        let vm = this
+
+        $("#harsat_manual").keyup(function() {
+            var val = vm.thousandSeparator(this.value)
+              
+            this.value = val;
+            vm.data.harsat_manual = val
+        })
+
+        $("#volume").keyup(function() {
+            var val = vm.thousandSeparator(this.value)
+              
+            this.value = val;
+            vm.data.volume = val
         })
     },
     methods: {
@@ -466,9 +477,25 @@ let app = new Vue({
                 app.data.select_tipe_produk = $(e.currentTarget).val();
             });
         },
+        thousandSeparator(val){
+            val = val.replace(/[^0-9\.]/g,'');
+              
+            if(val != "") {
+                valArr = val.split('.');
+                valArr[0] = (parseInt(valArr[0],10)).toLocaleString();
+                val = valArr.join('.');
+            }
+
+            return val
+        },
         addProduk: function() {
             let harsat = 0
             let total = 0
+            let volume = 0
+            let ket_harsat = 0
+            let ket_volume= 0
+            let vm = this
+            
             app.btnAddProduct = 'Menambahkan...'
 
             let arrtipe = app.data.select_tipe_produk.split("#")
@@ -484,8 +511,13 @@ let app = new Vue({
                     total = harsat * app.data.volume
                 })
             }else{
-                harsat = app.data.harsat_manual
-                total = harsat * app.data.volume
+                ket_harsat = app.data.harsat_manual
+                harsat = ket_harsat.replace(",", "")
+
+                ket_volume = app.data.volume
+                volume = ket_volume.replace(",", "")
+
+                total = harsat * volume
             }
             if(app.data.sbu == 'A' || app.data.sbu == 'F' || app.data.sbu == 'F'){
                 var satuan_ = 'pcs'
@@ -502,14 +534,15 @@ let app = new Vue({
                 kd_produk: app.data.kd_produk,
                 tipe_produk: tipe_produk,
                 // volume: app.data.volume + ' ' + satuan_,
-                volume: app.data.volume,
+                volume: volume,
+                ket_volume: ket_volume,
                 satuan: satuan_,
                 harsat: harsat,
-                ket_harsat: 'Rp. ' + harsat,
+                ket_harsat: 'Rp. ' + ket_harsat,
                 total: total,
-                ket_total: 'Rp. ' + total
+                ket_total: 'Rp. ' + vm.thousandSeparator(total.toString())
             }
-
+            
             app.data.produk.push(tmp)
 
             app.btnAddProduct = 'Tambah Produk'
