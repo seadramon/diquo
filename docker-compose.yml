@@ -1,0 +1,20 @@
+version: '3.7'
+
+services:
+  penawaran:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: penawaran_image
+    container_name: penawaran
+    restart: unless-stopped
+    tty: true
+    volumes:
+      - ./local.ini:/usr/local/etc/php/conf.d/local.ini
+      - /storage/penawaran:/var/www/penawaran/storage/app
+    networks:
+      - intra_net
+
+networks:
+  intra_net:
+    name: internal_network
