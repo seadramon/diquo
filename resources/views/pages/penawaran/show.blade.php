@@ -96,10 +96,10 @@
                             <thead>
                                 <tr class="fw-semibold fs-6">
                                     <th width="15%">&nbsp;No Produk</th>
-                                    <th width="40%">SBU</th>
                                     <th width="20%">Tipe Produk</th>
                                     <th width="5%">Volume</th>
                                     <th width="10%">HPP</th>
+                                    <th width="10%">Transportasi</th>
                                     <th width="10%">Total</th>
                                 </tr>
                             </thead>
@@ -108,10 +108,10 @@
                                     @foreach($data->produk as $row)
                                         <tr>
                                             <td>&nbsp;{{ $row->kd_produk }}</td>
-                                            <td>{{ !empty($row->getsbu)?$row->getsbu->singkatan2.' - '.$row->getsbu->nama_sbu:'' }}</td>
                                             <td>{{ $row->tipe_produk}}</td>
                                             <td>{{ $row->volume }}</td>
                                             <td>{{ 'Rp. '.$row->harsat_produk }}</td>
+                                            <td>{{ 'Rp. '.$row->transportasi }}</td>
                                             <td>{{ 'Rp. '.$row->total }}</td>
                                         </tr>
                                     @endforeach

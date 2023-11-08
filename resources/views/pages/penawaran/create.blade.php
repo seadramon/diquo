@@ -96,76 +96,6 @@
                     </div>
                 </div>
 
-                <!-- DETAIL PRODUK -->
-                <div class="card shadow-sm mb-3">
-                    <div class="card-header">
-                        <h3 class="card-title">Detail Produk</h3>
-                    </div>
-
-                    <div class="card-body">
-                        <div class="form-group mb-3 col-lg-6">
-                            <label class="form-label">Jenis</label>
-                            <select class="form-control" id="tipe" v-model="data.tipe">
-                                <option  v-for="(row,idx) in dropdown.tipe" :value="idx">@{{ row }}</option>
-                            </select>
-                        </div>
-                        <div class="form-group mb-3 col-lg-6">
-                            <label class="form-label">Tipe Produk</label>
-                            <select class="form-control" name="tipe_produk" id="tipe_produk" v-model="data.tipe_produk"></select>
-                        </div>
-
-                        <div class="form-group mb-3 col-lg-6">
-                            <label class="form-label">Volume</label>
-                            <input type="text" name="volume" id="volume" v-model="data.volume" class="form-control volume currency">
-                        </div>
-                        <div class="form-group mb-3 col-lg-6" v-show="data.tipe == 'NS'">
-                            <label class="form-label">Satuan</label>
-                            <input type="text" name="satuan" id="satuan" v-model="data.satuan" class="form-control satuan">
-                        </div>
-                        <div class="form-group mb-3 col-lg-6" v-show="data.tipe == 'NS'">
-                            <label class="form-label">Harga Satuan</label>
-                            <input type="text" name="harsat_manual" id="harsat_manual" v-model="data.harsat_manual" class="form-control harsat_manual currency">
-                        </div>
-
-                        <div class="form-group mb-3 col-lg-6">
-                            <button class="btn btn-success" @click.prevent="addProduk">@{{ btnAddProduct }}</button>
-                        </div>
-
-                        <table class="table table-row-bordered gy-5" width="100%">
-                            <thead>
-                                <tr class="fw-semibold fs-6">
-                                    <th width="10%">&nbsp;No Produk</th>
-                                    <th width="35%">SBU</th>
-                                    <th width="20%">Tipe Produk</th>
-                                    <th width="5%">Volume</th>
-                                    <th width="5%">Satuan</th>
-                                    <th width="10%">HPP</th>
-                                    <th width="10%">Total</th>
-                                    <th width="5%">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="(row, idx) in data.produk">
-                                    <td>&nbsp;@{{ row.kd_produk }}</td>
-                                    <td>@{{ row.ket_sbu }}</td>
-                                    <td>@{{ row.tipe_produk}}</td>
-                                    <td>@{{ row.volume }}</td>
-                                    <td>@{{ row.satuan }}</td>
-                                    <td>@{{ row.ket_harsat }}</td>
-                                    <td>@{{ row.ket_total }}</td>
-                                    <td>
-                                        <a href="javascript:void(0)" style="color: red;" @click.prevent="removeProduk(idx)">Hapus</a>&nbsp;
-                                    </td>
-                                </tr>
-
-                                <tr class="text-dark-800 text-center" v-if="data.produk.length < 1">
-                                    <td colspan="8">&nbsp;Produk Kosong</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
                 <!-- ANGKUTAN -->
                 <div class="card shadow-sm mb-3" v-show="data.kondisi == 'fot'">
                     <div class="card-header">
@@ -225,7 +155,75 @@
                         </div>
                     </div>
                 </div>
+                <!-- DETAIL PRODUK -->
+                <div class="card shadow-sm mb-3">
+                    <div class="card-header">
+                        <h3 class="card-title">Detail Produk</h3>
+                    </div>
 
+                    <div class="card-body">
+                        <div class="form-group mb-3 col-lg-6">
+                            <label class="form-label">Jenis</label>
+                            <select class="form-control" id="tipe" v-model="data.tipe">
+                                <option  v-for="(row,idx) in dropdown.tipe" :value="idx">@{{ row }}</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-3 col-lg-6">
+                            <label class="form-label">Tipe Produk</label>
+                            <select class="form-control" name="tipe_produk" id="tipe_produk" v-model="data.tipe_produk"></select>
+                        </div>
+
+                        <div class="form-group mb-3 col-lg-6">
+                            <label class="form-label">Volume</label>
+                            <input type="text" name="volume" id="volume" v-model="data.volume" class="form-control volume currency">
+                        </div>
+                        <div class="form-group mb-3 col-lg-6" v-show="data.tipe == 'NS'">
+                            <label class="form-label">Satuan</label>
+                            <input type="text" name="satuan" id="satuan" v-model="data.satuan" class="form-control satuan">
+                        </div>
+                        <div class="form-group mb-3 col-lg-6" v-show="data.tipe == 'NS'">
+                            <label class="form-label">Harga Satuan</label>
+                            <input type="text" name="harsat_manual" id="harsat_manual" v-model="data.harsat_manual" class="form-control harsat_manual currency">
+                        </div>
+
+                        <div class="form-group mb-3 col-lg-6">
+                            <button class="btn btn-success" @click.prevent="addProduk">@{{ btnAddProduct }}</button>
+                        </div>
+
+                        <table class="table table-row-bordered gy-5" width="100%">
+                            <thead>
+                                <tr class="fw-semibold fs-6">
+                                    <th width="10%">&nbsp;No Produk</th>
+                                    <th width="20%">Tipe Produk</th>
+                                    <th width="5%">Volume</th>
+                                    <th width="5%">Satuan</th>
+                                    <th width="10%">HPP</th>
+                                    <th width="10%">Harga Transportasi</th>
+                                    <th width="10%">Harga Jual</th>
+                                    <th width="5%">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(row, idx) in data.produk">
+                                    <td>&nbsp;@{{ row.kd_produk }}</td>
+                                    <td>@{{ row.tipe_produk}}</td>
+                                    <td>@{{ row.volume }}</td>
+                                    <td>@{{ row.satuan }}</td>
+                                    <td>@{{ row.ket_harsat }}</td>
+                                    <td>@{{ row.ket_transport }}</td>
+                                    <td>@{{ row.ket_total }}</td>
+                                    <td>
+                                        <a href="javascript:void(0)" style="color: red;" @click.prevent="removeProduk(idx)">Hapus</a>&nbsp;
+                                    </td>
+                                </tr>
+
+                                <tr class="text-dark-800 text-center" v-if="data.produk.length < 1">
+                                    <td colspan="8">&nbsp;Produk Kosong</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
                 <!-- biaya umum pelaksanaan -->
                 <div class="card shadow-sm mb-3">
                     <div class="card-header">
@@ -467,7 +465,7 @@ let app = new Vue({
             });
         },
         addProduk: function() {
-            let harsat = 0
+            let harsat = 10
             let total = 0
             app.btnAddProduct = 'Menambahkan...'
 
@@ -476,41 +474,93 @@ let app = new Vue({
             app.data.tipe_produk = arrtipe[1]
 
             let tipe_produk = app.data.tipe_produk
+            var cad_hpp = 0;
+            if(app.data.idx_cad_hpp != ""){
+                cad_hpp = parseInt(app.data.idx_cad_hpp) / 100;
+            }
+            var hpju = 1;
+            if(app.data.idx_hpju != ""){
+                hpju = 1 - (parseInt(app.data.idx_hpju) / 100);
+            }
+            console.log(hpju)
             if(app.data.tipe == 'S'){
                 axios.get(
                     "{{ route('penawaran.harsat') }}" + "?kd_produk=" + app.data.kd_produk + "&pat=" + app.data.pabrik
                 ).then(response => {
-                    harsat = parseInt(response.data.nilai_hpp.replace(".", ""))
-                    total = harsat * parseInt(app.data.volume.replace(".", ""))
+                    harsat = parseInt(response.data.nilai_hpp)
+                    var h_trans = 0
+                    if(app.data.harga_angkutan != ""){
+                        h_trans = parseInt(app.data.harga_angkutan) 
+                    }
+                    harsat = harsat + (harsat * cad_hpp);
+                    total = harsat + h_trans
+                    total = parseFloat(total / hpju).toFixed(0) 
+
+                    if(app.data.sbu == 'A' || app.data.sbu == 'F' || app.data.sbu == 'F'){
+                        var satuan_ = 'pcs'
+                    }else{
+                        var satuan_ = 'meter'
+                    }
+                    if(app.data.tipe == 'NS'){
+                        satuan_ = app.data.satuan
+                    }
+                    let tmp = {
+                        kd_produk : app.data.kd_produk,
+                        sbu: app.data.sbu,
+                        ket_sbu: app.data.ket_sbu,
+                        kd_produk: app.data.kd_produk,
+                        tipe_produk: tipe_produk,
+                        // volume: app.data.volume + ' ' + satuan_,
+                        volume: app.data.volume,
+                        satuan: satuan_,
+                        harsat: harsat,
+                        ket_harsat: 'Rp. ' + harsat,
+                        transport: h_trans,
+                        ket_transport: 'Rp. ' + h_trans,
+                        total: total,
+                        ket_total: 'Rp. ' + total
+                    }
+
+                    app.data.produk.push(tmp)
                 })
+                
             }else{
                 harsat = parseInt(app.data.harsat_manual.replace(".", ""))
-                total = harsat * parseInt(app.data.volume.replace(".", ""))
-            }
-            if(app.data.sbu == 'A' || app.data.sbu == 'F' || app.data.sbu == 'F'){
-                var satuan_ = 'pcs'
-            }else{
-                var satuan_ = 'meter'
-            }
-            if(app.data.tipe == 'NS'){
-                satuan_ = app.data.satuan
-            }
-            let tmp = {
-                kd_produk : app.data.kd_produk,
-                sbu: app.data.sbu,
-                ket_sbu: app.data.ket_sbu,
-                kd_produk: app.data.kd_produk,
-                tipe_produk: tipe_produk,
-                // volume: app.data.volume + ' ' + satuan_,
-                volume: app.data.volume,
-                satuan: satuan_,
-                harsat: harsat,
-                ket_harsat: 'Rp. ' + harsat,
-                total: total,
-                ket_total: 'Rp. ' + total
-            }
+                var h_trans = 0
+                if(app.data.harga_angkutan != ""){
+                    h_trans = parseInt(app.data.harga_angkutan) 
+                } 
+                harsat = harsat + (harsat * cad_hpp);
+                total = harsat + h_trans
+                total = parseFloat(total / hpju).toFixed(0) 
 
-            app.data.produk.push(tmp)
+                if(app.data.sbu == 'A' || app.data.sbu == 'F' || app.data.sbu == 'F'){
+                    var satuan_ = 'pcs'
+                }else{
+                    var satuan_ = 'meter'
+                }
+                if(app.data.tipe == 'NS'){
+                    satuan_ = app.data.satuan
+                }
+                let tmp = {
+                    kd_produk : app.data.kd_produk,
+                    sbu: app.data.sbu,
+                    ket_sbu: app.data.ket_sbu,
+                    kd_produk: app.data.kd_produk,
+                    tipe_produk: tipe_produk,
+                    // volume: app.data.volume + ' ' + satuan_,
+                    volume: app.data.volume,
+                    satuan: satuan_,
+                    harsat: harsat,
+                    transport: h_trans,
+                    ket_transport: 'Rp. ' + h_trans,
+                    ket_harsat: 'Rp. ' + harsat,
+                    total: total,
+                    ket_total: 'Rp. ' + total
+                }
+
+                app.data.produk.push(tmp)
+            }
 
             app.btnAddProduct = 'Tambah Produk'
         },

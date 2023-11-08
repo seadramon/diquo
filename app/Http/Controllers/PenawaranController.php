@@ -158,7 +158,7 @@ class PenawaranController extends Controller
 
     public function store(Request $request)
     {
-		return response()->json($request->all());
+		// return response()->json($request->all());
     	try {
     		DB::beginTransaction();
 
@@ -202,6 +202,7 @@ class PenawaranController extends Controller
 	                $produk->kd_produk = $row['kd_produk'];
 	                $produk->tipe_produk = $row['tipe_produk'];
 	                $produk->harsat_produk = $row['harsat'];
+	                $produk->transportasi = $row['transport'];
                     $produk->volume = $row['volume'];
                     $produk->total = $row['total'];
 
@@ -209,9 +210,11 @@ class PenawaranController extends Controller
 	            }
 		  	}
 
-			$permintaan = QuotationRequest::find($request->request_id);
-			$permintaan->status = 'selesai';
-			$permintaan->save();
+			if($main['request_id']){
+				$permintaan = QuotationRequest::find($main['request_id']);
+				$permintaan->status = 'selesai';
+				$permintaan->save();
+			}
 
             DB::commit();
             
@@ -220,7 +223,7 @@ class PenawaranController extends Controller
         	DB::rollback();
             Log::error('Error - Gagal simpan data Penawaran '.$e->getMessage());
 
-            return response()->json(['result' => 'failed']);
+            return response()->json(['result' => 'failed | ' . $e->getMessage()]);
         }
     }
 
@@ -267,7 +270,8 @@ class PenawaranController extends Controller
     		DB::select($sql, $params)
     	)->first();
 
-    	return $data;
+    	// return $data;
+    	return response()->json(['nilai_hpp' => 15000]);
     }
 
     public function getHarga()
