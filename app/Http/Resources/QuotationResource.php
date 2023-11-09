@@ -15,6 +15,7 @@ class QuotationResource extends JsonResource
     public function toArray($request)
     {
         return [
+            "id" => $this->id,
             "sbu" => !empty($this->getsbu)?$this->getsbu->singkatan2.' - '.$this->getsbu->nama_sbu:'-',
             "no_surat" => $this->no_surat,
             "nama_pelanggan" => $this->nama_pelanggan,

@@ -165,7 +165,7 @@ class PenawaranController extends Controller
     		$main = $request['maindata'];
             $data = new Quotation;
 
-            $data->no_surat = $main['no_surat'];
+            $data->no_surat = $main['no_surat'] . "P00";
 		  	$data->nama_pelanggan = $main['nama_pelanggan'];
 		  	$data->nama_perusahaan = $main['nama_perusahaan'];
 		  	$data->no_hp = $main['no_hp'];

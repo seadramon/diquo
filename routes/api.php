@@ -34,6 +34,7 @@ Route::name('api.')->namespace('Api')->group(function() {
     Route::get('viewer/{path}', [FileController::class, 'viewer'])->name('file.viewer');
 
     Route::get('penawaran', [PenawaranController::class, 'index'])->name('penawaran.index');
+    Route::get('penawaran/{id}', [PenawaranController::class, 'show'])->name('penawaran.index');
 
     Route::name('general.')->prefix('general')->namespace('General')->group(function() {
         Route::get('proyek-list/{kd_pat}', [ProyekController::class, 'proyekList'])->name('proyek-list');

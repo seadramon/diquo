@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Internal\SptbListResource;
 use App\Http\Resources\Pelanggan\PelangganResource;
+use App\Http\Resources\QuotationDetailResource;
 use App\Http\Resources\QuotationResource;
 use App\Models\Pelanggan;
 use App\Models\PelangganUser;
@@ -36,6 +37,13 @@ class PenawaranController extends Controller
         }
 
         return QuotationResource::collection($data->paginate($perPage)->appends($request->except(['page','_token'])), "minimal");
+    }
+
+    public function show(Request $request)
+    {
+        $data = Quotation::with('produk', 'pabrik', 'getsbu', 'getpic')->find($request->id);
+
+        return new QuotationDetailResource($data);
     }
 }
 

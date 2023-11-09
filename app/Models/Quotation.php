@@ -30,4 +30,9 @@ class Quotation extends Model
     {
     	return $this->belongsTo(Personal::class, 'pic', 'employee_id');
     }
+
+    public function getse()
+    {
+    	return $this->belongsTo(Personal::class, 'se_id', 'employee_id');
+    }
 }
