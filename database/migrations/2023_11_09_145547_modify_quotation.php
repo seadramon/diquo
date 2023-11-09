@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('quo_quotation_produks', function (Blueprint $table) {
-            $table->decimal('transportasi', 14, 2)->nullable();
+            $table->string('status', 50)->nullable();
         });
     }
 
@@ -25,8 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('quo_quotation_products', function (Blueprint $table) {
-            $table->dropColumn(['transportasi']);
+        Schema::table('quo_quotation_produks', function (Blueprint $table) {
+            $table->dropColumn(['status']);
         });
     }
 };

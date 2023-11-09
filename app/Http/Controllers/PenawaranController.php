@@ -143,12 +143,12 @@ class PenawaranController extends Controller
             })
             ->all();
 
-    	return view('pages.penawaran.create', compact('lokasi', 
-    		'kondisi', 
-    		'pic', 
-    		'tipe', 
-    		'sbu', 
-    		'jnsAngkutan', 
+    	return view('pages.penawaran.create', compact('lokasi',
+    		'kondisi',
+    		'pic',
+    		'tipe',
+    		'sbu',
+    		'jnsAngkutan',
     		'pabrik',
     		'produk',
     		'no_surat',
@@ -217,9 +217,9 @@ class PenawaranController extends Controller
 			}
 
             DB::commit();
-            
+
             return response()->json(['result' => 'success']);
-        } catch (Exception $e) {            
+        } catch (Exception $e) {
         	DB::rollback();
             Log::error('Error - Gagal simpan data Penawaran '.$e->getMessage());
 
@@ -259,10 +259,10 @@ class PenawaranController extends Controller
     	];
 
     	$sql = "
-    		SELECT 
-				FNC_COUNT_HPPS ( :kd_produk, '2C', (SELECT TRIM (fnc_get_tri_rev_hpps (SYSDATE, 'TRI')) FROM DUAL), 
-				(SELECT TRIM (fnc_get_tri_rev_hpps (SYSDATE, 'REV')) FROM DUAL), 0)nilai_hpp 
-			FROM 
+    		SELECT
+				FNC_COUNT_HPPS ( :kd_produk, '2C', (SELECT TRIM (fnc_get_tri_rev_hpps (SYSDATE, 'TRI')) FROM DUAL),
+				(SELECT TRIM (fnc_get_tri_rev_hpps (SYSDATE, 'REV')) FROM DUAL), 0)nilai_hpp
+			FROM
 				DUAL
     	";
 
@@ -270,8 +270,8 @@ class PenawaranController extends Controller
     		DB::select($sql, $params)
     	)->first();
 
-    	// return $data;
-    	return response()->json(['nilai_hpp' => 15000]);
+    	return $data;
+    	// return response()->json(['nilai_hpp' => 15000]);
     }
 
     public function getHarga()

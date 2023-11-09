@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\Internal\KalenderController;
 use App\Http\Controllers\Api\Internal\NppController;
 use App\Http\Controllers\Api\Internal\PelangganController as InternalPelangganController;
 use App\Http\Controllers\Api\Pelanggan\HistoryController;
+use App\Http\Controllers\Api\PenawaranController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -31,6 +32,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::name('api.')->namespace('Api')->group(function() {
     Route::get('viewer/{path}', [FileController::class, 'viewer'])->name('file.viewer');
+
+    Route::get('penawaran', [PenawaranController::class, 'index'])->name('penawaran.index');
 
     Route::name('general.')->prefix('general')->namespace('General')->group(function() {
         Route::get('proyek-list/{kd_pat}', [ProyekController::class, 'proyekList'])->name('proyek-list');
@@ -60,7 +63,7 @@ Route::name('api.')->namespace('Api')->group(function() {
         Route::get('spm', [InternalController::class, 'spmList'])->name('spm-list');
         Route::get('sptb', [InternalController::class, 'sptbList'])->name('sptb-list');
     });
-    
+
     Route::name('pelanggan.')->prefix('pelanggan')->namespace('Pelanggan')->group(function() {
         Route::get('search', [PelangganController::class, 'search'])->name('search');
         Route::post('register', [PelangganController::class, 'register'])->name('register');
