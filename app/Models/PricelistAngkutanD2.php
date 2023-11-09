@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PricelistAngkutanD2 extends Model
@@ -12,4 +13,9 @@ class PricelistAngkutanD2 extends Model
 
     protected $table = 'tms_pricelist_angkutan_d2';
     protected $guarded = [];
+
+    public function pad(): BelongsTo
+    {
+        return $this->belongsTo(PricelistAngkutanD::class, 'pad_id');
+    }
 }

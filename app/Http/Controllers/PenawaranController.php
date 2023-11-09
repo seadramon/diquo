@@ -11,6 +11,7 @@ use App\Models\VMasterProduk;
 use App\Models\Quotation;
 use App\Models\QuotationProduk;
 use App\Models\PricelistAngkutanD;
+use App\Models\PricelistAngkutanD2;
 use App\Models\QuotationRequest;
 use App\Models\TbSurat;
 use Exception;
@@ -95,6 +96,7 @@ class PenawaranController extends Controller
 
         $pic = Personal::where('kd_pat', '1E')
         	->where('employee_id', 'not like', "TX%")
+            ->where("st", 1)
         	->orderBy('first_name')
         	->get()
         	->mapWithKeys(function($item){
@@ -102,6 +104,18 @@ class PenawaranController extends Controller
             })
             ->all();
         $pic = ["" => "Pilih PIC"] + $pic;
+
+        $se = Personal::where('kd_pat', '1E')
+        	->where('employee_id', 'not like', "TX%")
+        	->where('kd_jbt', 'JBTS0001')
+            ->where("st", 1)
+        	->orderBy('first_name')
+        	->get()
+        	->mapWithKeys(function($item){
+                return [$item->employee_id => $item->full_name];
+            })
+            ->all();
+        $se = ["" => "Pilih SE"] + $se;
 
         $sbu = VMasterProduk::select(DB::raw("distinct kd_sbu, singkatan2||' - '||nama_sbu as sbu"))
         	->where('std_nonstd', 'S')
@@ -132,8 +146,6 @@ class PenawaranController extends Controller
 
         $produk = [];
 
-        $pricelist = $this->getHarga();
-
 		$no_surat = TbSurat::where('no_surat', 'LIKE', 'PS.03.03%')
 			->where('kd_pat_pengirim', '1E')
 			->get()
@@ -146,14 +158,14 @@ class PenawaranController extends Controller
     	return view('pages.penawaran.create', compact('lokasi',
     		'kondisi',
     		'pic',
+    		'se',
     		'tipe',
     		'sbu',
     		'jnsAngkutan',
     		'pabrik',
     		'produk',
     		'no_surat',
-    		'permintaan',
-    		'pricelist'));
+    		'permintaan'));
     }
 
     public function store(Request $request)
@@ -174,6 +186,7 @@ class PenawaranController extends Controller
 		  	$data->lokasi_proyek = $main['lokasi'];
 		  	$data->kondisi_pengiriman = $main['kondisi'];
 		  	$data->pic = $main['pic'];
+		  	$data->se_id = $main['se'];
 		  	$data->sbu = $main['sbu'];
 		  	// angkutan
 		  	$data->kd_material = isset($main['kd_material'])?$main['kd_material']:null;
@@ -274,9 +287,16 @@ class PenawaranController extends Controller
     	// return response()->json(['nilai_hpp' => 15000]);
     }
 
-    public function getHarga()
+    public function getHarga(Request $request)
     {
-    	return response()->json(['result' => 'success', 'harga' => '100000']);
+        $harga = PricelistAngkutanD2::where('range_min', '<=', $request->jarak)
+            ->where('range_max', '>=', $request->jarak)
+            ->whereHas('pad', function($sql) use ($request) {
+                $sql->where('kd_material', $request->kd_material);
+                $sql->where('kd_muat', $request->kd_pabrik);
+            })
+            ->first();
+    	return response()->json(['result' => 'success', 'harga' => $harga->h_final ?? '0']);
     }
 
 	public function cetak($id)

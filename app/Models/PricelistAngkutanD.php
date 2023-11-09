@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PricelistAngkutanD extends Model
@@ -47,5 +48,10 @@ class PricelistAngkutanD extends Model
     public function npp()
     {
     	return $this->belongsTo(Npp::class, 'kd_muat', 'no_npp');
+    }
+
+    public function pah(): BelongsTo
+    {
+        return $this->belongsTo(PricelistAngkutanH::class, 'pah_id');
     }
 }

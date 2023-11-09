@@ -21,7 +21,7 @@
                     <div class="card-header">
                         <h3 class="card-title">Data Proyek</h3>
                     </div>
-                
+
                     <div class="card-body">
                         @if (count($errors) > 0)
                             @foreach($errors->all() as $error)
@@ -83,6 +83,12 @@
                                 <label class="form-label">PIC</label>
                                 <select class="form-control" id="pic" v-model="data.pic">
                                     <option  v-for="(row,idx) in dropdown.pic" :value="idx">@{{ row }}</option>
+                                </select>
+                            </div>
+                            <div class="form-group mb-3 col-lg-6">
+                                <label class="form-label">SE</label>
+                                <select class="form-control" id="se" v-model="data.se">
+                                    <option  v-for="(row,idx) in dropdown.se" :value="idx">@{{ row }}</option>
                                 </select>
                             </div>
 
@@ -252,7 +258,7 @@
                         <div class="card-footer" style="text-align: right;">
                             <button class="btn btn-success mr-2" @click.prevent="calculateTotal">@{{ btnCalculateTotal }}</button>
                             <a href="{{ route('penawaran.index') }}" class="btn btn-light btn-active-light-primary me-2">Kembali</a>
-                            
+
                             <button type="submit" data-kt-contacts-type="submit" class="btn btn-primary" @click.prevent="onSubmit()">
                                 <span class="indicator-label">Save</span>
                                 <span class="indicator-progress">Please wait...
@@ -317,6 +323,7 @@ function initialState (){
             kondisi: '',
             tipe: '',
             pic: '',
+            se: '',
             sbu: '',
             ket_sbu:'',
             kd_produk: '',
@@ -343,13 +350,13 @@ function initialState (){
             lokasi : {!! json_encode($lokasi) !!},
             kondisi : {!! json_encode($kondisi) !!},
             pic : {!! json_encode($pic) !!},
+            se : {!! json_encode($se) !!},
             sbu : {!! json_encode($sbu) !!},
             tipe : {!! json_encode($tipe) !!},
             pabrik : {!! json_encode($pabrik) !!},
             jenis_angkutan: {!! json_encode($jnsAngkutan) !!},
             no_surat: {!! json_encode($no_surat) !!}
         },
-        pricelist: {!! json_encode($pricelist) !!},
         btnAddProduct: 'Tambah Produk',
         btnLihatHarga: 'Lihat Harga',
         btnCalculateTotal: 'Hitung Total',
@@ -393,6 +400,11 @@ let app = new Vue({
                 placeholder: 'Pilih Pic'
             }).on('change', function () {
                 app.data.pic = this.value;
+            })
+            $("#se").select2({
+                placeholder: 'Pilih SE'
+            }).on('change', function () {
+                app.data.se = this.value;
             })
 
             $("#sbu").select2({
@@ -460,7 +472,7 @@ let app = new Vue({
                 }
             })
 
-            $("#tipe_produk").on("select2:select", function (e) { 
+            $("#tipe_produk").on("select2:select", function (e) {
                 app.data.select_tipe_produk = $(e.currentTarget).val();
             });
         },
@@ -482,7 +494,11 @@ let app = new Vue({
             if(app.data.idx_hpju != ""){
                 hpju = 1 - (parseInt(app.data.idx_hpju) / 100);
             }
-            console.log(hpju)
+            var cad_trans = 0;
+            if(app.data.idx_cad_transportasi != ""){
+                cad_trans = (parseInt(app.data.idx_cad_transportasi) / 100);
+            }
+            // console.log(hpju)
             if(app.data.tipe == 'S'){
                 axios.get(
                     "{{ route('penawaran.harsat') }}" + "?kd_produk=" + app.data.kd_produk + "&pat=" + app.data.pabrik
@@ -490,11 +506,12 @@ let app = new Vue({
                     harsat = parseInt(response.data.nilai_hpp)
                     var h_trans = 0
                     if(app.data.harga_angkutan != ""){
-                        h_trans = parseInt(app.data.harga_angkutan) 
+                        h_trans = parseInt(app.data.harga_angkutan)
+                        h_trans = h_trans + (h_trans * cad_trans);
                     }
                     harsat = harsat + (harsat * cad_hpp);
                     total = harsat + h_trans
-                    total = parseFloat(total / hpju).toFixed(0) 
+                    total = parseFloat(total / hpju).toFixed(0)
 
                     if(app.data.sbu == 'A' || app.data.sbu == 'F' || app.data.sbu == 'F'){
                         var satuan_ = 'pcs'
@@ -523,16 +540,17 @@ let app = new Vue({
 
                     app.data.produk.push(tmp)
                 })
-                
+
             }else{
                 harsat = parseInt(app.data.harsat_manual.replace(".", ""))
                 var h_trans = 0
                 if(app.data.harga_angkutan != ""){
-                    h_trans = parseInt(app.data.harga_angkutan) 
-                } 
+                    h_trans = parseInt(app.data.harga_angkutan)
+                    h_trans = h_trans + (h_trans * cad_trans);
+                }
                 harsat = harsat + (harsat * cad_hpp);
                 total = harsat + h_trans
-                total = parseFloat(total / hpju).toFixed(0) 
+                total = parseFloat(total / hpju).toFixed(0)
 
                 if(app.data.sbu == 'A' || app.data.sbu == 'F' || app.data.sbu == 'F'){
                     var satuan_ = 'pcs'
@@ -570,7 +588,7 @@ let app = new Vue({
         showPrice() {
             app.btnLihatHarga = "Please wait..."
             axios.get(
-                "{{ route('penawaran.harga') }}"
+                "{{ route('penawaran.harga') }}" + "?kd_material=" + app.data.kd_material + "&kd_pabrik=" + app.data.kd_pabrik + "&jarak=" + app.data.jarak
             ).then(response => {
                 var res = response.data
 
@@ -619,20 +637,11 @@ let app = new Vue({
         calculateTotal: function() {
             let total = 0
             app.btnAddProduct = 'Menghitung...'
-            if(app.data.idx_cad_hpp != ""){
-                total += parseInt(app.data.idx_cad_hpp.replace(".", ""))
-            }
-            if(app.data.idx_cad_transportasi != ""){
-                total += parseInt(app.data.idx_cad_transportasi.replace(".", ""))
-            }
-            if(app.data.idx_hpju != ""){
-                total += parseInt(app.data.idx_hpju.replace(".", ""))
-            }
             if(app.data.biaya_pelaksanaan != ""){
                 total += parseInt(app.data.biaya_pelaksanaan.replace(".", ""))
             }
             for (produk of app.data.produk) {
-                total += parseInt(produk.total)
+                total += parseInt(produk.total) * produk.volume
             }
             app.data.total_penawaran = total
             app.btnAddProduct = 'Hitung Total'
