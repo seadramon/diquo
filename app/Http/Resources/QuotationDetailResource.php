@@ -15,6 +15,11 @@ class QuotationDetailResource extends JsonResource
     public function toArray($request)
     {
         // return parent::toArray($request);
+        $produk = $this->produk;
+        $total_penawaran = $produk->map(function($item){
+            return $item->volume * $item->total;
+        })->sum();
+        $total_penawaran = $total_penawaran + ($total_penawaran * $this->biaya_pelaksanaan / 100);
         return [
             "id" => $this->id,
             "no_surat" => $this->no_surat,
@@ -45,7 +50,8 @@ class QuotationDetailResource extends JsonResource
             "idx_cad_transportasi" => $this->idx_cad_transportasi,
             "idx_hpju" => $this->idx_hpju,
             "biaya_pelaksanaan" => $this->biaya_pelaksanaan,
-            "products" => QuotationProdukResource::collection($this->produk),
+            "total_penawaran" => $total_penawaran,
+            "products" => QuotationProdukResource::collection($produk),
         ];
     }
 }

@@ -218,7 +218,7 @@ class PenawaranController extends Controller
 	                $produk->harsat_produk = $row['harsat'];
 	                $produk->transportasi = $row['transport'];
                     $produk->volume = str_replace(',', '', $row['volume']);
-                    $produk->total = $row['total'];
+                    $produk->total = str_replace(',', '', $row['total']);
 
 	                $produk->save();
 	            }

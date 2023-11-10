@@ -682,13 +682,13 @@ let app = new Vue({
         calculateTotal: function() {
             let total = 0
             app.btnAddProduct = 'Menghitung...'
-            if(app.data.biaya_pelaksanaan != ""){
-                total += parseInt(app.data.biaya_pelaksanaan.replace(".", ""))
-            }
             for (produk of app.data.produk) {
-                total += parseInt(produk.total) * produk.volume
+                total += parseFloat(produk.total) * produk.volume.toString().replace(/[^0-9\.]/g,'')
             }
-            app.data.total_penawaran = total
+            if(app.data.biaya_pelaksanaan != ""){
+                total = total + (parseInt(app.data.biaya_pelaksanaan.replace(".", "")) * total / 100)
+            }
+            app.data.total_penawaran = vm.thousandSeparator(total)
             app.btnAddProduct = 'Hitung Total'
         },
         thousandSeparator(val){
