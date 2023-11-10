@@ -21,6 +21,7 @@ class QuotationResource extends JsonResource
             "nama_pelanggan" => $this->nama_pelanggan,
             "nama_proyek" => $this->nama_proyek,
             "lokasi_proyek" => $this->lokasi_proyek,
+            "status" => $this->status,
             "pic" => !empty($this->getpic)?$this->getpic->full_name:'-',
             "created_at" => date('d/m/Y', strtotime($this->created_at)),
         ];
