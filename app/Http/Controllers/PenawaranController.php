@@ -12,6 +12,7 @@ use App\Models\Quotation;
 use App\Models\QuotationProduk;
 use App\Models\PricelistAngkutanD;
 use App\Models\PricelistAngkutanD2;
+use App\Models\Produk;
 use App\Models\QuotationRequest;
 use App\Models\TbSurat;
 use Exception;
@@ -193,14 +194,14 @@ class PenawaranController extends Controller
 		  	$data->ket_material = isset($main['ket_material'])?$main['ket_material']:null;
 		  	$data->kd_pabrik = isset($main['kd_pabrik'])?$main['kd_pabrik']:null;
 		  	$data->jarak = isset($main['jarak'])?$main['jarak']:null;
-		  	$data->harga_angkutan = isset($main['harga_angkutan'])?$main['harga_angkutan']:0;
+		  	$data->harga_angkutan = isset($main['harga_angkutan'])? str_replace(',', '', $main['harga_angkutan']):0;
 		  	// index
-		  	$data->idx_cad_hpp = $main['idx_cad_hpp'];
-		  	$data->idx_cad_transportasi = $main['idx_cad_transportasi'];
-		  	$data->idx_hpju = $main['idx_hpju'];
+		  	$data->idx_cad_hpp = str_replace(',', '', $main['idx_cad_hpp']);
+		  	$data->idx_cad_transportasi = str_replace(',', '', $main['idx_cad_transportasi']);
+		  	$data->idx_hpju = str_replace(',', '', $main['idx_hpju']);
 		  	// biaya
 		  	$data->biaya_pelaksanaan = !empty($main['biaya_pelaksanaan'])?str_replace(".", "", $main['biaya_pelaksanaan']):0;
-
+            $data->status = "penawaran";
 		  	$data->save();
 		  	$id = $data->id;
 
@@ -216,7 +217,7 @@ class PenawaranController extends Controller
 	                $produk->tipe_produk = $row['tipe_produk'];
 	                $produk->harsat_produk = $row['harsat'];
 	                $produk->transportasi = $row['transport'];
-                    $produk->volume = $row['volume'];
+                    $produk->volume = str_replace(',', '', $row['volume']);
                     $produk->total = $row['total'];
 
 	                $produk->save();
@@ -266,6 +267,7 @@ class PenawaranController extends Controller
     {
     	$kd_produk = $request->kd_produk;
     	$pat = $request->pat;
+        $produk = Produk::find($kd_produk);
 
     	$params = [
     		'kd_produk' => $kd_produk
@@ -283,7 +285,12 @@ class PenawaranController extends Controller
     		DB::select($sql, $params)
     	)->first();
 
-    	return $data;
+    	// return $data;
+    	return response()->json([
+            "nilai_hpp" => $data->nilai_hpp ?? 0,
+            "ton" => ($produk->kg ?? 1000) / 1000,
+            "panjang" => $produk->panjang ?? 1,
+        ]);
     	// return response()->json(['nilai_hpp' => 15000]);
     }
 

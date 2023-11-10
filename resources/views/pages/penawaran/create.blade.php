@@ -233,7 +233,7 @@
                 <!-- biaya umum pelaksanaan -->
                 <div class="card shadow-sm mb-3">
                     <div class="card-header">
-                        <h3 class="card-title">Biaya Umum Pelaksanaan</h3>
+                        <h3 class="card-title">BUP + BP</h3>
                     </div>
 
                     <div class="card-body">
@@ -372,9 +372,45 @@ let app = new Vue({
     mounted: function() {
         this.$nextTick(this.initSelect2);
 
-        $(".currency").keyup(function() {
-            var rp = formatRupiah(this.value);
-            $(this).val(rp);
+        let vm = this
+
+        $("#harsat_manual").keyup(function() {
+            var val = vm.thousandSeparator(this.value)
+
+            this.value = val;
+            vm.data.harsat_manual = val
+        })
+
+        $("#volume").keyup(function() {
+            var val = vm.thousandSeparator(this.value)
+
+            this.value = val;
+            vm.data.volume = val
+        })
+
+        $("#idx_cad_hpp").keyup(function() {
+            var val = vm.thousandSeparator(this.value)
+
+            this.value = val;
+            vm.data.idx_cad_hpp = val
+        })
+        $("#idx_cad_transportasi").keyup(function() {
+            var val = vm.thousandSeparator(this.value)
+
+            this.value = val;
+            vm.data.idx_cad_transportasi = val
+        })
+        $("#idx_hpju").keyup(function() {
+            var val = vm.thousandSeparator(this.value)
+
+            this.value = val;
+            vm.data.idx_hpju = val
+        })
+        $("#total").keyup(function() {
+            var val = vm.thousandSeparator(this.value)
+
+            this.value = val;
+            vm.data.biaya_pelaksanaan = val
         })
     },
     methods: {
@@ -479,6 +515,9 @@ let app = new Vue({
         addProduk: function() {
             let harsat = 10
             let total = 0
+            let kg = 1
+            let panjang = 1
+            let vm = this
             app.btnAddProduct = 'Menambahkan...'
 
             let arrtipe = app.data.select_tipe_produk.split("#")
@@ -488,28 +527,34 @@ let app = new Vue({
             let tipe_produk = app.data.tipe_produk
             var cad_hpp = 0;
             if(app.data.idx_cad_hpp != ""){
-                cad_hpp = parseInt(app.data.idx_cad_hpp) / 100;
+                cad_hpp = parseInt(app.data.idx_cad_hpp.toString().replace(/[^0-9\.]/g,'')) / 100;
             }
             var hpju = 1;
             if(app.data.idx_hpju != ""){
-                hpju = 1 - (parseInt(app.data.idx_hpju) / 100);
+                hpju = 1 - (parseInt(app.data.idx_hpju.toString().replace(/[^0-9\.]/g,'')) / 100);
             }
             var cad_trans = 0;
             if(app.data.idx_cad_transportasi != ""){
-                cad_trans = (parseInt(app.data.idx_cad_transportasi) / 100);
+                cad_trans = (parseInt(app.data.idx_cad_transportasi.toString().replace(/[^0-9\.]/g,'')) / 100);
             }
             // console.log(hpju)
             if(app.data.tipe == 'S'){
                 axios.get(
                     "{{ route('penawaran.harsat') }}" + "?kd_produk=" + app.data.kd_produk + "&pat=" + app.data.pabrik
                 ).then(response => {
+                    panjang = parseInt(response.data.panjang)
+                    kg = parseFloat(response.data.kg)
                     harsat = parseInt(response.data.nilai_hpp)
                     var h_trans = 0
                     if(app.data.harga_angkutan != ""){
-                        h_trans = parseInt(app.data.harga_angkutan)
+                        h_trans = parseInt(app.data.harga_angkutan.toString().replace(/[^0-9\.]/g,''))
                         h_trans = h_trans + (h_trans * cad_trans);
+                        h_trans = parseFloat(h_trans / kg).toFixed(0);
                     }
                     harsat = harsat + (harsat * cad_hpp);
+                    if(app.data.sbu == 'B' || app.data.sbu == 'E'){
+                        harsat = parseFloat(harsat / panjang).toFixed(0);
+                    }
                     total = harsat + h_trans
                     total = parseFloat(total / hpju).toFixed(0)
 
@@ -531,21 +576,21 @@ let app = new Vue({
                         volume: app.data.volume,
                         satuan: satuan_,
                         harsat: harsat,
-                        ket_harsat: 'Rp. ' + harsat,
                         transport: h_trans,
-                        ket_transport: 'Rp. ' + h_trans,
+                        ket_transport: 'Rp. ' + vm.thousandSeparator(h_trans),
+                        ket_harsat: 'Rp. ' + vm.thousandSeparator(harsat),
                         total: total,
-                        ket_total: 'Rp. ' + total
+                        ket_total: 'Rp. ' + vm.thousandSeparator(total)
                     }
 
                     app.data.produk.push(tmp)
                 })
 
             }else{
-                harsat = parseInt(app.data.harsat_manual.replace(".", ""))
+                harsat = parseInt(app.data.harsat_manual.toString().replace(/[^0-9\.]/g,''))
                 var h_trans = 0
                 if(app.data.harga_angkutan != ""){
-                    h_trans = parseInt(app.data.harga_angkutan)
+                    h_trans = parseInt(app.data.harga_angkutan.toString().replace(/[^0-9\.]/g,''))
                     h_trans = h_trans + (h_trans * cad_trans);
                 }
                 harsat = harsat + (harsat * cad_hpp);
@@ -571,10 +616,10 @@ let app = new Vue({
                     satuan: satuan_,
                     harsat: harsat,
                     transport: h_trans,
-                    ket_transport: 'Rp. ' + h_trans,
-                    ket_harsat: 'Rp. ' + harsat,
+                    ket_transport: 'Rp. ' + vm.thousandSeparator(h_trans),
+                    ket_harsat: 'Rp. ' + vm.thousandSeparator(harsat),
                     total: total,
-                    ket_total: 'Rp. ' + total
+                    ket_total: 'Rp. ' + vm.thousandSeparator(total)
                 }
 
                 app.data.produk.push(tmp)
@@ -594,7 +639,7 @@ let app = new Vue({
 
                 if (res.result == 'success') {
                     app.btnLihatHarga = "Lihat Harga"
-                    app.data.harga_angkutan = res.harga
+                    app.data.harga_angkutan = vm.thousandSeparator(res.harga)
                 }
             })
         },
@@ -645,6 +690,17 @@ let app = new Vue({
             }
             app.data.total_penawaran = total
             app.btnAddProduct = 'Hitung Total'
+        },
+        thousandSeparator(val){
+            val = val.toString().replace(/[^0-9\.]/g,'');
+
+            if(val != "") {
+                valArr = val.toString().split('.');
+                valArr[0] = (parseInt(valArr[0],10)).toLocaleString();
+                val = valArr.join('.');
+            }
+
+            return val
         },
     }
 })

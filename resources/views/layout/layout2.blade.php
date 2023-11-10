@@ -13,7 +13,7 @@
 		<meta property="og:url" content="http://tms.wika-beton.co.id" />
 		<meta property="og:site_name" content="Keenthemes | Metronic" />
 		<link rel="canonical" href="http://tms.wika-beton.co.id" />
-		<link rel="shortcut icon" href="{{ asset('content/TMS - icon version - white.png') }}" />
+		<link rel="shortcut icon" href="{{ asset('content/logo-wton.jpg') }}" />
 		<!--begin::Fonts-->
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
 		<!--end::Fonts-->
@@ -40,12 +40,12 @@
 	<!--begin::Body-->
 	<body data-kt-name="metronic" id="kt_body" class="page-loading-enabled page-loading header-tablet-and-mobile-fixed aside-enabled">
 		<!--begin::Theme mode setup on page load-->
-		
+
 		<!--end::Theme mode setup on page load-->
-		
+
 		<!--begin::loader-->
 		<div class="page-loader flex-column">
-			<img alt="Logo" class="h-100px" src="{{ asset('content/TMS - full version.png') }}" />
+			<img alt="Logo" class="h-100px" src="{{ asset('content/logo-wton.jpg') }}" />
 			<div class="d-flex align-items-center mt-5">
 				<span class="spinner-border text-primary" role="status"></span>
 				<span class="text-muted fs-6 fw-semibold ms-5">Loading...</span>
@@ -168,7 +168,7 @@
 						<div class="header-brand">
 							<!--begin::Logo-->
 							<a href="#">
-								<img alt="Logo" src="{{ asset('content/TMS - full version - white.png') }}" class="h-30px h-lg-45px" />
+								<img alt="Logo" src="{{ asset('content/logo-wton.jpg') }}" class="h-30px h-lg-45px" />
 							</a>
 							<!--end::Logo-->
 							<!--begin::Aside minimize-->
@@ -296,11 +296,11 @@
 					}
 				}
 				if(val.split('.').length > 1){
-					$(this).val(format(val, '.', val.split('.')[1].length)); 
+					$(this).val(format(val, '.', val.split('.')[1].length));
 				}else{
-					$(this).val(format(val, '.', 0)); 
+					$(this).val(format(val, '.', 0));
 				}
-				
+
 			});
 			function format(n, sep, decimals) {
 				n = parseFloat(n);
@@ -310,15 +310,15 @@
 				if(decimals > 0){
 					text += sep + n.toFixed(decimals).split(sep)[1];
 				}
-		
+
 				return text;
 			}
 			function reFormat(val, decimal = true){
 				val = val.toString();
 				if(val.split('.').length > 1 && decimal){
-					return format(val, '.', val.split('.')[1].length); 
+					return format(val, '.', val.split('.')[1].length);
 				}else{
-					return format(val, '.', 0); 
+					return format(val, '.', 0);
 				}
 			}
 
