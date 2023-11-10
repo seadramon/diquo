@@ -87,8 +87,8 @@ class PenawaranController extends Controller
 
         $kondisi = [
         	"" => "Pilih Kondisi",
-        	"loko" => 'loko',
-        	"fot" => 'fot'
+        	"loko" => 'LOKO',
+        	"fot" => 'FOT'
         ];
         $tipe = [
         	"S" => "Standard",

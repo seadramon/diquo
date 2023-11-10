@@ -71,6 +71,12 @@
                                     <option  v-for="(row,idx) in dropdown.lokasi" :value="idx">@{{ row }}</option>
                                 </select>
                             </div>
+                            <div class="form-group mb-3 col-lg-6">
+                                <label class="form-label">Pabrik</label>
+                                <select class="form-control" id="pabrik-angkutan">
+                                    <option  v-for="(row,idx) in dropdown.pabrik" :value="idx + '#'  + row">@{{ row }}</option>
+                                </select>
+                            </div>
 
                             <div class="form-group mb-3 col-lg-6">
                                 <label class="form-label">Kondisi Pengiriman</label>
@@ -115,14 +121,6 @@
                                 <option  v-for="(row,idx) in dropdown.jenis_angkutan" :value="idx + '#'  + row">@{{ row }}</option>
                             </select>
                         </div>
-
-                        <div class="form-group mb-3 col-lg-12">
-                            <label class="form-label">Pabrik</label>
-                            <select class="form-control" id="pabrik-angkutan">
-                                <option  v-for="(row,idx) in dropdown.pabrik" :value="idx + '#'  + row">@{{ row }}</option>
-                            </select>
-                        </div>
-
                         <div class="form-group mb-3 col-lg-12">
                             <label class="form-label">Jarak</label>
                             <input type="text" v-model="data.jarak" name="data.jarak" id="jarak" class="form-control jarak">
@@ -245,14 +243,30 @@
                 </div>
                 <!-- Preview Total -->
                 <div class="card shadow-sm mb-3">
-                    {{-- <div class="card-header">
+                    <div class="card-header">
                         <h3 class="card-title">Total Penawaran</h3>
-                    </div> --}}
+                    </div>
 
                     <div class="card-body">
                         <div class="form-group mb-3 col-lg-12">
-                            <label class="form-label">Total Harga Penawaran</label>
-                            <input type="text" name="total_penawaran" v-model="data.total_penawaran" id="total_penawaran" class="form-control total_penawaran currency">
+                            <label class="form-label">Total Harga Jual</label>
+                            <input type="text" name="ttl_h_jual" v-model="data.ttl_h_jual" id="ttl_h_jual" class="form-control">
+                        </div>
+                        <div class="form-group mb-3 col-lg-12">
+                            <label class="form-label">Total HPP</label>
+                            <input type="text" name="ttl_hpp" v-model="data.ttl_hpp" id="ttl_hpp" class="form-control">
+                        </div>
+                        <div class="form-group mb-3 col-lg-12">
+                            <label class="form-label">Total Transportasi</label>
+                            <input type="text" name="ttl_trans" v-model="data.ttl_trans" id="ttl_trans" class="form-control">
+                        </div>
+                        <div class="form-group mb-3 col-lg-12">
+                            <label class="form-label">Total BUP+BP</label>
+                            <input type="text" name="ttl_bup_bp" v-model="data.ttl_bup_bp" id="ttl_bup_bp" class="form-control">
+                        </div>
+                        <div class="form-group mb-3 col-lg-12">
+                            <label class="form-label">Total LKB</label>
+                            <input type="text" name="ttl_lkb" v-model="data.ttl_lkb" id="ttl_lkb" class="form-control">
                         </div>
 
                         <div class="card-footer" style="text-align: right;">
@@ -343,7 +357,11 @@ function initialState (){
             idx_cad_transportasi:'',
             idx_hpju:'',
             biaya_pelaksanaan:'',
-            total_penawaran:'',
+            ttl_lkb:'',
+            ttl_h_jual:'',
+            ttl_hpp:'',
+            ttl_trans:'',
+            ttl_bup_bp:'',
             produk: {!! json_encode($produk) !!}
         },
         dropdown: {
@@ -540,7 +558,7 @@ let app = new Vue({
             // console.log(hpju)
             if(app.data.tipe == 'S'){
                 axios.get(
-                    "{{ route('penawaran.harsat') }}" + "?kd_produk=" + app.data.kd_produk + "&pat=" + app.data.pabrik
+                    "{{ route('penawaran.harsat') }}" + "?kd_produk=" + app.data.kd_produk + "&pat=" + app.data.kd_pabrik
                 ).then(response => {
                     panjang = parseInt(response.data.panjang)
                     kg = parseFloat(response.data.kg)
@@ -631,6 +649,7 @@ let app = new Vue({
             app.data.produk.splice(idx, 1)
         },
         showPrice() {
+            let vm = this
             app.btnLihatHarga = "Please wait..."
             axios.get(
                 "{{ route('penawaran.harga') }}" + "?kd_material=" + app.data.kd_material + "&kd_pabrik=" + app.data.kd_pabrik + "&jarak=" + app.data.jarak
@@ -680,15 +699,42 @@ let app = new Vue({
             Object.assign(this.$data, initialState());
         },
         calculateTotal: function() {
-            let total = 0
+            let vm = this
+            let ttl = 0
+            let t_lkb = 0
+            let t_h_jual = 0
+            let t_hpp = 0
+            let t_trans = 0
+            let t_bup_bp = 0
             app.btnAddProduct = 'Menghitung...'
+
+            var cad_hpp = 0;
+            if(app.data.idx_cad_hpp != ""){
+                cad_hpp = parseInt(app.data.idx_cad_hpp.toString().replace(/[^0-9\.]/g,'')) / 100;
+            }
+            var cad_trans = 0;
+            if(app.data.idx_cad_transportasi != ""){
+                cad_trans = (parseInt(app.data.idx_cad_transportasi.toString().replace(/[^0-9\.]/g,'')) / 100);
+            }
+
             for (produk of app.data.produk) {
-                total += parseFloat(produk.total) * produk.volume.toString().replace(/[^0-9\.]/g,'')
+                var vol_prod = produk.volume.toString().replace(/[^0-9\.]/g,'')
+                t_h_jual += parseFloat(produk.total) * vol_prod
+                t_hpp += parseFloat(produk.harsat/(1+cad_hpp)) * vol_prod
+                t_trans += parseFloat(produk.transport/(1+cad_trans)) * vol_prod
+                ttl += parseFloat(produk.total) * vol_prod
             }
             if(app.data.biaya_pelaksanaan != ""){
-                total = total + (parseInt(app.data.biaya_pelaksanaan.replace(".", "")) * total / 100)
+                t_bup_bp = (parseInt(app.data.biaya_pelaksanaan.replace(".", "")) * ttl / 100)
+                ttl = ttl + t_bup_bp
             }
+            t_lkb = ((t_h_jual - t_hpp - t_trans - t_bup_bp) / t_h_jual * 100).toFixed(2)
             app.data.total_penawaran = vm.thousandSeparator(total)
+            app.data.ttl_h_jual = vm.thousandSeparator(t_h_jual)
+            app.data.ttl_hpp = vm.thousandSeparator(t_hpp)
+            app.data.ttl_trans = vm.thousandSeparator(t_trans)
+            app.data.ttl_bup_bp = vm.thousandSeparator(t_bup_bp)
+            app.data.ttl_lkb = t_lkb + "%"
             app.btnAddProduct = 'Hitung Total'
         },
         thousandSeparator(val){
