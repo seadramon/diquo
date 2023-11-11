@@ -16,8 +16,8 @@ class DashboardController extends Controller
     {
         $today = date('Y-m-d');
 
-        $type = Auth::check() ? 'vendor' : 'internal';
-        $value = Auth::check() ? Auth::user()->vendor_id : session('TMP_KDWIL');
+        $type =  'internal';
+        $value = '2G';
 
         $sp3Draft = Sp3::FilterLogin($type, $value)->where('st_wf', 0)->count();
         $sp3BelumVerif = Sp3::FilterLogin($type, $value)->where('st_wf', 1)->where('app1', 0)->count();

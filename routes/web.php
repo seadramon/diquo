@@ -245,6 +245,7 @@ Route::middleware([EnsureSessionIsValid::class])->group(function () {
 		Route::get('/', [DashboardController::class, 'index'])->name('index');
 	});
 });
+Route::get('ping', [DashboardController::class, 'index'])->name('index');
 
 Route::get('logout',	[LoginVendorController::class, 'signOut'])->name('logout');
 

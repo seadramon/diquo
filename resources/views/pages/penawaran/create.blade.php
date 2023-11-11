@@ -507,10 +507,11 @@ let app = new Vue({
                 axios.get(
                     "{{ route('penawaran.harsat') }}" + "?kd_produk=" + app.data.kd_produk + "&pat=" + app.data.pabrik
                 ).then(response => {
-                    harsat = response.data.nilai_hpp
-                    total = harsat * app.data.volume
+                    harsat = parseInt(response.data.nilai_hpp.replace(".", ""))
+                    total = harsat * parseInt(app.data.volume.replace(".", ""))
                 })
             }else{
+<<<<<<< HEAD
                 ket_harsat = app.data.harsat_manual
                 harsat = ket_harsat.replace(",", "")
 
@@ -518,6 +519,10 @@ let app = new Vue({
                 volume = ket_volume.replace(",", "")
 
                 total = harsat * volume
+=======
+                harsat = parseInt(app.data.harsat_manual.replace(".", ""))
+                total = harsat * parseInt(app.data.volume.replace(".", ""))
+>>>>>>> main
             }
             if(app.data.sbu == 'A' || app.data.sbu == 'F' || app.data.sbu == 'F'){
                 var satuan_ = 'pcs'
