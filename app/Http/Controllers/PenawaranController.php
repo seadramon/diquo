@@ -39,7 +39,8 @@ class PenawaranController extends Controller
                         </button>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="' . route('penawaran.show', $model->id) . '">Show</a></li>
-							<li><a class="dropdown-item" href="' . route('penawaran.print', ['id' => $model->id]) . '" target="_blank">Cetak</a></li>
+							<li><a class="dropdown-item" href="' . route('penawaran.nego', ['id' => $model->id]) . '" target="_blank">Nego</a></li>
+                            <li><a class="dropdown-item" href="' . route('penawaran.print', ['id' => $model->id]) . '" target="_blank">Cetak</a></li>
                         </ul>
                         </div>';
 
@@ -315,5 +316,73 @@ class PenawaranController extends Controller
 
         return $pdf->setPaper('a4', 'portrait')
             ->stream($filename . '.pdf');
+    }
+
+    public function nego($id)
+    {
+        $data = Quotation::find($id);
+        $produk = [];
+
+        if (count($data->produk) > 0) {
+            // dd($data->produk);
+            foreach ($data->produk as $row) {
+                $produk[] = [
+                    'kd_produk' => $row->kd_produk,
+                    'tipe_produk' => $row->tipe_produk,
+                    'volume' => $row->volume,
+                    'total' => $row->total,
+                    'harsat' => $row->harsat_produk,
+                    'transport' => $row->transportasi,
+                    'sbu' => $row->sbu
+                ];
+            }
+        }
+
+        return view('pages.penawaran.nego', compact('data', 'produk'));
+    }
+
+    public function storeNego(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $main = $request['maindata'];
+            $data = Quotation::find($main['request_id']);
+
+            $newdata = $data->replicate();
+            $newdata->created_at = date('Y-m-d H:i:s');
+            $newdata->updated_at = date('Y-m-d H:i:s');
+
+            $newdata->save();
+            $id = $newdata->id;
+
+            if (count($request['maindata']['produk']) > 0) {
+                $details = $request['maindata']['produk'];
+
+                foreach ($details as $row) {
+                    $produk = new QuotationProduk;
+
+                    $produk->quotation_id = $id;
+                    $produk->sbu = $row['sbu'];
+                    $produk->kd_produk = $row['kd_produk'];
+                    $produk->tipe_produk = $row['tipe_produk'];
+                    $produk->harsat_produk = $row['harsat'];
+                    $produk->transportasi = $row['transport'];
+                    $produk->volume = str_replace(',', '', $row['volume']);
+                    $produk->total = str_replace(',', '', $row['total']);
+
+                    $produk->save();
+                }
+            }
+
+            DB::commit();
+
+            return response()->json(['result' => 'success']);
+        } catch (Exception $e) {
+            DB::rollback();
+            Log::error('Error - Gagal simpan data Penawaran '.$e->getMessage());
+
+            return response()->json(['result' => 'failed | ' . $e->getMessage()]);
+        }
     }
 }
