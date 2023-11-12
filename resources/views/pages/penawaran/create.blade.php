@@ -533,65 +533,68 @@ let app = new Vue({
         addProduk: function() {
             let harsat = 10
             let total = 0
-            let kg = 1
+            let ton = 1
             let panjang = 1
             let vm = this
-            app.btnAddProduct = 'Menambahkan...'
+            vm.btnAddProduct = 'Menambahkan...'
 
-            let arrtipe = app.data.select_tipe_produk.split("#")
-            app.data.kd_produk = arrtipe[0]
-            app.data.tipe_produk = arrtipe[1]
+            let arrtipe = vm.data.select_tipe_produk.split("#")
+            vm.data.kd_produk = arrtipe[0]
+            vm.data.tipe_produk = arrtipe[1]
 
-            let tipe_produk = app.data.tipe_produk
+            let tipe_produk = vm.data.tipe_produk
             var cad_hpp = 0;
-            if(app.data.idx_cad_hpp != ""){
-                cad_hpp = parseInt(app.data.idx_cad_hpp.toString().replace(/[^0-9\.]/g,'')) / 100;
+            if(vm.data.idx_cad_hpp != ""){
+                cad_hpp = parseInt(vm.data.idx_cad_hpp.toString().replace(/[^0-9\.]/g,'')) / 100;
             }
             var hpju = 1;
-            if(app.data.idx_hpju != ""){
-                hpju = 1 - (parseInt(app.data.idx_hpju.toString().replace(/[^0-9\.]/g,'')) / 100);
+            if(vm.data.idx_hpju != ""){
+                hpju = 1 - (parseInt(vm.data.idx_hpju.toString().replace(/[^0-9\.]/g,'')) / 100);
             }
             var cad_trans = 0;
-            if(app.data.idx_cad_transportasi != ""){
-                cad_trans = (parseInt(app.data.idx_cad_transportasi.toString().replace(/[^0-9\.]/g,'')) / 100);
+            if(vm.data.idx_cad_transportasi != ""){
+                cad_trans = (parseInt(vm.data.idx_cad_transportasi.toString().replace(/[^0-9\.]/g,'')) / 100);
             }
             // console.log(hpju)
-            if(app.data.tipe == 'S'){
+            if(vm.data.tipe == 'S'){
                 axios.get(
-                    "{{ route('penawaran.harsat') }}" + "?kd_produk=" + app.data.kd_produk + "&pat=" + app.data.kd_pabrik
+                    "{{ route('penawaran.harsat') }}" + "?kd_produk=" + vm.data.kd_produk + "&pat=" + vm.data.kd_pabrik
                 ).then(response => {
                     panjang = parseInt(response.data.panjang)
-                    kg = parseFloat(response.data.kg)
+                    ton = parseFloat(response.data.ton)
                     harsat = parseInt(response.data.nilai_hpp)
                     var h_trans = 0
-                    if(app.data.harga_angkutan != ""){
-                        h_trans = parseInt(app.data.harga_angkutan.toString().replace(/[^0-9\.]/g,''))
+                    if(vm.data.harga_angkutan != ""){
+                        console.log(vm.data.harga_angkutan)
+                        console.log(vm.data)
+                        h_trans = parseInt(vm.data.harga_angkutan.toString().replace(/[^0-9\.]/g,''))
                         h_trans = h_trans + (h_trans * cad_trans);
-                        h_trans = parseFloat(h_trans / kg).toFixed(0);
+                        h_trans = parseFloat((h_trans / ton).toFixed(0))
                     }
+                    // console.log(h_trans)
                     harsat = harsat + (harsat * cad_hpp);
-                    if(app.data.sbu == 'B' || app.data.sbu == 'E'){
-                        harsat = parseFloat(harsat / panjang).toFixed(0);
+                    if(vm.data.sbu == 'B' || vm.data.sbu == 'E'){
+                        harsat = parseFloat((harsat / panjang).toFixed(0))
                     }
                     total = harsat + h_trans
-                    total = parseFloat(total / hpju).toFixed(0)
+                    total = parseFloat((total / hpju).toFixed(0))
 
-                    if(app.data.sbu == 'A' || app.data.sbu == 'F' || app.data.sbu == 'F'){
+                    if(vm.data.sbu == 'A' || vm.data.sbu == 'F' || vm.data.sbu == 'F'){
                         var satuan_ = 'pcs'
                     }else{
                         var satuan_ = 'meter'
                     }
-                    if(app.data.tipe == 'NS'){
-                        satuan_ = app.data.satuan
+                    if(vm.data.tipe == 'NS'){
+                        satuan_ = vm.data.satuan
                     }
                     let tmp = {
-                        kd_produk : app.data.kd_produk,
-                        sbu: app.data.sbu,
-                        ket_sbu: app.data.ket_sbu,
-                        kd_produk: app.data.kd_produk,
+                        kd_produk : vm.data.kd_produk,
+                        sbu: vm.data.sbu,
+                        ket_sbu: vm.data.ket_sbu,
+                        kd_produk: vm.data.kd_produk,
                         tipe_produk: tipe_produk,
-                        // volume: app.data.volume + ' ' + satuan_,
-                        volume: app.data.volume,
+                        // volume: vm.data.volume + ' ' + satuan_,
+                        volume: vm.data.volume,
                         satuan: satuan_,
                         harsat: harsat,
                         transport: h_trans,
@@ -601,36 +604,37 @@ let app = new Vue({
                         ket_total: 'Rp. ' + vm.thousandSeparator(total)
                     }
 
-                    app.data.produk.push(tmp)
+                    vm.data.produk.push(tmp)
+                    console.log(vm.data.produk)
                 })
 
             }else{
-                harsat = parseInt(app.data.harsat_manual.toString().replace(/[^0-9\.]/g,''))
+                harsat = parseInt(vm.data.harsat_manual.toString().replace(/[^0-9\.]/g,''))
                 var h_trans = 0
-                if(app.data.harga_angkutan != ""){
-                    h_trans = parseInt(app.data.harga_angkutan.toString().replace(/[^0-9\.]/g,''))
+                if(vm.data.harga_angkutan != ""){
+                    h_trans = parseInt(vm.data.harga_angkutan.toString().replace(/[^0-9\.]/g,''))
                     h_trans = h_trans + (h_trans * cad_trans);
                 }
                 harsat = harsat + (harsat * cad_hpp);
                 total = harsat + h_trans
-                total = parseFloat(total / hpju).toFixed(0)
+                total = parseFloat((total / hpju).toFixed(0))
 
-                if(app.data.sbu == 'A' || app.data.sbu == 'F' || app.data.sbu == 'F'){
+                if(vm.data.sbu == 'A' || vm.data.sbu == 'F' || vm.data.sbu == 'F'){
                     var satuan_ = 'pcs'
                 }else{
                     var satuan_ = 'meter'
                 }
-                if(app.data.tipe == 'NS'){
-                    satuan_ = app.data.satuan
+                if(vm.data.tipe == 'NS'){
+                    satuan_ = vm.data.satuan
                 }
                 let tmp = {
-                    kd_produk : app.data.kd_produk,
-                    sbu: app.data.sbu,
-                    ket_sbu: app.data.ket_sbu,
-                    kd_produk: app.data.kd_produk,
+                    kd_produk : vm.data.kd_produk,
+                    sbu: vm.data.sbu,
+                    ket_sbu: vm.data.ket_sbu,
+                    kd_produk: vm.data.kd_produk,
                     tipe_produk: tipe_produk,
-                    // volume: app.data.volume + ' ' + satuan_,
-                    volume: app.data.volume,
+                    // volume: vm.data.volume + ' ' + satuan_,
+                    volume: vm.data.volume,
                     satuan: satuan_,
                     harsat: harsat,
                     transport: h_trans,
@@ -640,10 +644,10 @@ let app = new Vue({
                     ket_total: 'Rp. ' + vm.thousandSeparator(total)
                 }
 
-                app.data.produk.push(tmp)
+                vm.data.produk.push(tmp)
             }
 
-            app.btnAddProduct = 'Tambah Produk'
+            vm.btnAddProduct = 'Tambah Produk'
         },
         removeProduk(idx) {
             app.data.produk.splice(idx, 1)
