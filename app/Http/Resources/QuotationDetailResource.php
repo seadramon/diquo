@@ -51,6 +51,11 @@ class QuotationDetailResource extends JsonResource
             "idx_hpju" => $this->idx_hpju,
             "biaya_pelaksanaan" => $this->biaya_pelaksanaan,
             "total_penawaran" => $total_penawaran,
+            "total_harga_jual" => $total_penawaran,
+            "total_hpp" => $total_penawaran,
+            "total_transportasi" => $total_penawaran,
+            "total_bup" => $total_penawaran,
+            "total_lkb" => $total_penawaran,
             "products" => QuotationProdukResource::collection($produk),
         ];
     }

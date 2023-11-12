@@ -311,7 +311,7 @@ function initialState (){
             ket_material:'',
             kd_pabrik:"{{ $data->pabrik->ket }}",
             jarak:"{{ $data->jarak }}",
-            harga_angkutan:"{{ $data->harga_angkutan }}",
+            harga_angkutan: "{{ $data->harga_angkutan }}",
             idx_cad_hpp:"{{ $data->idx_cad_hpp }}",
             idx_cad_transportasi:"{{ $data->idx_cad_transportasi }}",
             idx_hpju:"{{ $data->idx_hpju }}",
@@ -584,27 +584,52 @@ let app = new Vue({
                 vm.data.produk = {!! json_encode($produk) !!}
             }
             for (produk of vm.data.produk) {
+                // if (vm.data.diskon > 0) {
+                //     var discount = vm.data.diskon / 100
+                //     var tmp_harsat = 0
+                //     var tmp_trans = 0
+                //     var tmp_total = 0 //hrgjual
+                       
+                //     tmp_harsat = produk.harsat - (produk.harsat * discount)
+                //     produk.harsat = parseFloat(tmp_harsat).toFixed(0)
+
+                //     tmp_trans = produk.transport - (produk.transport * discount) 
+                //     produk.transport = parseFloat(tmp_trans).toFixed(0)
+
+                //     tmp_total = parseInt(produk.harsat) + parseInt(produk.transport)
+                //     produk.total = parseFloat(tmp_total / hpju).toFixed(0)
+                // }   
+
+                // var vol_prod = produk.volume.toString().replace(/[^0-9\.]/g,'')
+                // t_h_jual += parseFloat(produk.total) * vol_prod
+                // t_hpp += parseFloat(produk.harsat/(1+cad_hpp)) * vol_prod
+                // t_trans += parseFloat(produk.transport/(1+cad_trans)) * vol_prod
+                // ttl += parseFloat(produk.total) * vol_prod
+                var tmp_harsat = 0
+                var tmp_trans = 0
+                var tmp_total = 0
                 if (vm.data.diskon > 0) {
                     var discount = vm.data.diskon / 100
-                    var tmp_harsat = 0
-                    var tmp_trans = 0
-                    var tmp_total = 0 //hrgjual
                        
                     tmp_harsat = produk.harsat - (produk.harsat * discount)
-                    produk.harsat = parseFloat(tmp_harsat).toFixed(0)
+                    produk.harsat = vm.thousandSeparator(parseFloat(tmp_harsat).toFixed(0))
 
                     tmp_trans = produk.transport - (produk.transport * discount) 
-                    produk.transport = parseFloat(tmp_trans).toFixed(0)
+                    produk.transport = vm.thousandSeparator(parseFloat(tmp_trans).toFixed(0))
 
-                    tmp_total = parseInt(produk.harsat) + parseInt(produk.transport)
-                    produk.total = parseFloat(tmp_total / hpju).toFixed(0)
+                    tmp_total = (tmp_harsat + tmp_trans) / hpju
+                    produk.total = vm.thousandSeparator(parseFloat(tmp_total).toFixed(0))
+                }else{
+                    tmp_harsat = produk.harsat
+                    tmp_trans = produk.transport
+                    tmp_total = produk.total
                 }   
 
                 var vol_prod = produk.volume.toString().replace(/[^0-9\.]/g,'')
-                t_h_jual += parseFloat(produk.total) * vol_prod
-                t_hpp += parseFloat(produk.harsat/(1+cad_hpp)) * vol_prod
-                t_trans += parseFloat(produk.transport/(1+cad_trans)) * vol_prod
-                ttl += parseFloat(produk.total) * vol_prod
+                t_h_jual += parseFloat(tmp_total) * vol_prod
+                t_hpp += parseFloat(tmp_harsat/(1+cad_hpp)).toFixed(0) * vol_prod
+                t_trans += parseFloat(tmp_trans/(1+cad_trans)).toFixed(0) * vol_prod
+                ttl += parseFloat(tmp_total) * vol_prod
             }
             if(vm.data.biaya_pelaksanaan != ""){
                 t_bup_bp = (parseInt(vm.data.biaya_pelaksanaan.replace(".", "")) * ttl / 100)

@@ -350,11 +350,17 @@ class PenawaranController extends Controller
             $data = Quotation::find($main['request_id']);
 
             $newdata = $data->replicate();
-            $newdata->created_at = date('Y-m-d H:i:s');
-            $newdata->updated_at = date('Y-m-d H:i:s');
 
+            $no_surat = $newdata->no_surat;
+            $no_baru = intval(substr($no_surat, -2)) + 1;
+            $newdata->no_surat = substr($no_surat, 0, strlen($no_surat) - 3) . "P". sprintf('%02d', $no_baru);
+
+            $newdata->parent_id = $data->id;
             $newdata->save();
             $id = $newdata->id;
+
+            $data->status = "revised";
+            $data->save();
 
             if (count($request['maindata']['produk']) > 0) {
                 $details = $request['maindata']['produk'];
