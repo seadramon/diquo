@@ -103,16 +103,16 @@
                     <div class="card-body">
                         <div class="form-group mb-3 col-lg-12">
                             <label class="form-label">Jenis Angkutan</label>
-                            <input type="text" v-model="data.kd_material" name="data.kd_material" id="kd_material" class="form-control jarak">
+                            <input type="text" v-model="data.kd_material" name="data.kd_material" id="kd_material" class="form-control jarak form-control-solid" readonly>
                         </div>
                         <div class="form-group mb-3 col-lg-12">
                             <label class="form-label">Jarak</label>
-                            <input type="text" v-model="data.jarak" name="data.jarak" id="jarak" class="form-control jarak">
+                            <input type="text" v-model="data.jarak" name="data.jarak" id="jarak" class="form-control jarak form-control-solid" readonly>
                         </div>
 
                         <div class="form-group mb-3 col-lg-7 ">
                             <label class="form-label">Harga Angkutan</label>
-                            <input type="text" readonly v-model="data.harga_angkutan" name="harga_angkutan" id="harga_angkutan" class="form-control form-control-solid">
+                            <input type="text" readonly v-model="data.harga_angkutan" name="harga_angkutan" id="harga_angkutan" class="form-control form-control-solid" >
                         </div>
                         <!-- <div class="mb-3 col-lg-5">
                             <a class="btn btn-primary" @click.prevent="showPrice()" disabled>@{{ btnLihatHarga }}</a>
@@ -169,9 +169,9 @@
                                         <td>@{{ row.tipe_produk }}</td>
                                         <td>@{{ row.volume }}</td>
                                         <td>&nbsp;</td>
-                                        <td>@{{ 'Rp. ' + row.harsat }}</td>
-                                        <td>@{{ 'Rp. ' + row.transport }}</td>
-                                        <td>@{{ 'Rp. ' + row.total }}</td>
+                                        <td>@{{ 'Rp. ' + thousandSeparator(row.harsat) }}</td>
+                                        <td>@{{ 'Rp. ' + thousandSeparator(row.transport) }}</td>
+                                        <td>@{{ 'Rp. ' + thousandSeparator(row.total) }}</td>
                                     </tr>    
                                 </template>
                                 <tr v-if="data.produk.length == 0">
@@ -296,7 +296,7 @@ function initialState (){
             kondisi: "{{ $data->kondisi_pengiriman }}",
             tipe: '',
             pic: "{{ !empty($data->getpic)?$data->getpic->full_name:'-' }}",
-            se: '',
+            se: "{{ !empty($data->getse)?$data->getse->full_name:'-' }}",
             sbu: "{{ !empty($data->getsbu)?$data->getsbu->singkatan2.' - '.$data->getsbu->nama_sbu:'' }}",
             ket_sbu:'',
             kd_produk: '',
@@ -340,6 +340,8 @@ let app = new Vue({
     },
     mounted: function() {
         this.$nextTick(this.initSelect2);
+
+        this.calculateTotal()
 
         let vm = this
 
@@ -563,27 +565,27 @@ let app = new Vue({
             let t_hpp = 0
             let t_trans = 0
             let t_bup_bp = 0
-            app.btnCalculateTotal = 'Menghitung...'
+            vm.btnCalculateTotal = 'Menghitung...'
 
             var cad_hpp = 0;
-            if(app.data.idx_cad_hpp != ""){
-                cad_hpp = parseInt(app.data.idx_cad_hpp.toString().replace(/[^0-9\.]/g,'')) / 100;
+            if(vm.data.idx_cad_hpp != ""){
+                cad_hpp = parseInt(vm.data.idx_cad_hpp.toString().replace(/[^0-9\.]/g,'')) / 100;
             }
             var cad_trans = 0;
-            if(app.data.idx_cad_transportasi != ""){
-                cad_trans = (parseInt(app.data.idx_cad_transportasi.toString().replace(/[^0-9\.]/g,'')) / 100);
+            if(vm.data.idx_cad_transportasi != ""){
+                cad_trans = (parseInt(vm.data.idx_cad_transportasi.toString().replace(/[^0-9\.]/g,'')) / 100);
             }
             var hpju = 1;
-            if(app.data.idx_hpju != ""){
-                hpju = 1 - (parseInt(app.data.idx_hpju.toString().replace(/[^0-9\.]/g,'')) / 100);
+            if(vm.data.idx_hpju != ""){
+                hpju = 1 - (parseInt(vm.data.idx_hpju.toString().replace(/[^0-9\.]/g,'')) / 100);
             }
 
-            if (app.data.diskon > 0) {
-                app.data.produk = {!! json_encode($produk) !!}
+            if (vm.data.diskon > 0) {
+                vm.data.produk = {!! json_encode($produk) !!}
             }
-            for (produk of app.data.produk) {
-                if (app.data.diskon > 0) {
-                    var discount = app.data.diskon / 100
+            for (produk of vm.data.produk) {
+                if (vm.data.diskon > 0) {
+                    var discount = vm.data.diskon / 100
                     var tmp_harsat = 0
                     var tmp_trans = 0
                     var tmp_total = 0 //hrgjual
@@ -604,18 +606,18 @@ let app = new Vue({
                 t_trans += parseFloat(produk.transport/(1+cad_trans)) * vol_prod
                 ttl += parseFloat(produk.total) * vol_prod
             }
-            if(app.data.biaya_pelaksanaan != ""){
-                t_bup_bp = (parseInt(app.data.biaya_pelaksanaan.replace(".", "")) * ttl / 100)
+            if(vm.data.biaya_pelaksanaan != ""){
+                t_bup_bp = (parseInt(vm.data.biaya_pelaksanaan.replace(".", "")) * ttl / 100)
                 ttl = ttl + t_bup_bp
             }
             t_lkb = ((t_h_jual - t_hpp - t_trans - t_bup_bp) / t_h_jual * 100).toFixed(2)
-            app.data.total_penawaran = vm.thousandSeparator(total)
-            app.data.ttl_h_jual = vm.thousandSeparator(t_h_jual)
-            app.data.ttl_hpp = vm.thousandSeparator(t_hpp)
-            app.data.ttl_trans = vm.thousandSeparator(t_trans)
-            app.data.ttl_bup_bp = vm.thousandSeparator(t_bup_bp)
-            app.data.ttl_lkb = t_lkb + "%"
-            app.btnCalculateTotal = 'Hitung Total'
+            vm.data.total_penawaran = vm.thousandSeparator(total)
+            vm.data.ttl_h_jual = vm.thousandSeparator(t_h_jual)
+            vm.data.ttl_hpp = vm.thousandSeparator(t_hpp)
+            vm.data.ttl_trans = vm.thousandSeparator(t_trans)
+            vm.data.ttl_bup_bp = vm.thousandSeparator(t_bup_bp)
+            vm.data.ttl_lkb = t_lkb + "%"
+            vm.btnCalculateTotal = 'Hitung Total'
         },
         thousandSeparator(val){
             val = val.toString().replace(/[^0-9\.]/g,'');
