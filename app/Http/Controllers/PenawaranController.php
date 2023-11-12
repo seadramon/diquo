@@ -61,6 +61,11 @@ class PenawaranController extends Controller
 
                 return $edit;
             })
+            // ->addColumn('approval_status', function($model) {
+            //     $edit = !empty($model->getpic)?$model->getpic->full_name:'-';
+
+            //     return $edit;
+            // })
             ->rawColumns(['menu'])
             ->toJson();
     }
@@ -216,8 +221,8 @@ class PenawaranController extends Controller
 	                $produk->sbu = $row['sbu'];
 	                $produk->kd_produk = $row['kd_produk'];
 	                $produk->tipe_produk = $row['tipe_produk'];
-	                $produk->harsat_produk = $row['harsat'];
-	                $produk->transportasi = $row['transport'];
+                    $produk->harsat_produk = str_replace(',', '', $row['harsat']);
+                    $produk->transportasi = str_replace(',', '', $row['transport']);
                     $produk->volume = str_replace(',', '', $row['volume']);
                     $produk->total = str_replace(',', '', $row['total']);
 
@@ -372,8 +377,8 @@ class PenawaranController extends Controller
                     $produk->sbu = $row['sbu'];
                     $produk->kd_produk = $row['kd_produk'];
                     $produk->tipe_produk = $row['tipe_produk'];
-                    $produk->harsat_produk = $row['harsat'];
-                    $produk->transportasi = $row['transport'];
+                    $produk->harsat_produk = str_replace(',', '', $row['harsat']);
+                    $produk->transportasi = str_replace(',', '', $row['transport']);
                     $produk->volume = str_replace(',', '', $row['volume']);
                     $produk->total = str_replace(',', '', $row['total']);
 
