@@ -35,6 +35,8 @@ Route::name('api.')->namespace('Api')->group(function() {
 
     Route::get('penawaran', [PenawaranController::class, 'index'])->name('penawaran.index');
     Route::get('penawaran/{id}', [PenawaranController::class, 'show'])->name('penawaran.index');
+    Route::get('penawaran-approval', [PenawaranController::class, 'approvalList'])->name('penawaran.approval.list');
+    Route::post('penawaran-approval', [PenawaranController::class, 'approve'])->name('penawaran.approval');
 
     Route::name('general.')->prefix('general')->namespace('General')->group(function() {
         Route::get('proyek-list/{kd_pat}', [ProyekController::class, 'proyekList'])->name('proyek-list');
