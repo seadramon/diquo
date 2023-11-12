@@ -627,8 +627,8 @@ let app = new Vue({
 
                 var vol_prod = produk.volume.toString().replace(/[^0-9\.]/g,'')
                 t_h_jual += parseFloat(tmp_total) * vol_prod
-                t_hpp += parseFloat(tmp_harsat/(1+cad_hpp)).toFixed(0) * vol_prod
-                t_trans += parseFloat(tmp_trans/(1+cad_trans)).toFixed(0) * vol_prod
+                t_hpp += parseFloat((tmp_harsat/(1+cad_hpp)).toFixed(0)).toFixed(0) * vol_prod
+                t_trans += parseFloat((tmp_trans/(1+cad_trans)).toFixed(0)).toFixed(0) * vol_prod
                 ttl += parseFloat(tmp_total) * vol_prod
             }
             if(vm.data.biaya_pelaksanaan != ""){
