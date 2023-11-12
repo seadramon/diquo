@@ -47,9 +47,11 @@ Route::group(['prefix' => '/penawaran', 'as' => 'penawaran.'], function(){
 	Route::get('harsat', [PenawaranController::class, 'getHarsat'])->name('harsat');
 	Route::get('harga', [PenawaranController::class, 'getHarga'])->name('harga');
 	Route::get('show/{id}', [PenawaranController::class, 'show'])->name('show');
+	Route::get('/print/{id}', [PenawaranController::class, 'cetak'])->name('print');
+	Route::get('/nego/{id}', [PenawaranController::class, 'nego'])->name('nego');
 
 	Route::post('store', [PenawaranController::class, 'store'])->name('store');
-	Route::get('/print/{id}', [PenawaranController::class, 'cetak'])->name('print');
+	Route::post('store-nego', [PenawaranController::class, 'storeNego'])->name('store-nego');
 });
 
 Route::group(['prefix' => '/permintaan-penawaran', 'as' => 'permintaan-penawaran.'], function(){
