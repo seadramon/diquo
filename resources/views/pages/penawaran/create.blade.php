@@ -250,23 +250,23 @@
                     <div class="card-body">
                         <div class="form-group mb-3 col-lg-12">
                             <label class="form-label">Total Harga Jual</label>
-                            <input type="text" name="ttl_h_jual" v-model="data.ttl_h_jual" id="ttl_h_jual" class="form-control">
+                            <input type="text" name="ttl_h_jual" v-model="data.ttl_h_jual" id="ttl_h_jual" class="form-control" readonly>
                         </div>
                         <div class="form-group mb-3 col-lg-12">
                             <label class="form-label">Total HPP</label>
-                            <input type="text" name="ttl_hpp" v-model="data.ttl_hpp" id="ttl_hpp" class="form-control">
+                            <input type="text" name="ttl_hpp" v-model="data.ttl_hpp" id="ttl_hpp" class="form-control" readonly>
                         </div>
                         <div class="form-group mb-3 col-lg-12">
                             <label class="form-label">Total Transportasi</label>
-                            <input type="text" name="ttl_trans" v-model="data.ttl_trans" id="ttl_trans" class="form-control">
+                            <input type="text" name="ttl_trans" v-model="data.ttl_trans" id="ttl_trans" class="form-control" readonly>
                         </div>
                         <div class="form-group mb-3 col-lg-12">
                             <label class="form-label">Total BUP+BP</label>
-                            <input type="text" name="ttl_bup_bp" v-model="data.ttl_bup_bp" id="ttl_bup_bp" class="form-control">
+                            <input type="text" name="ttl_bup_bp" v-model="data.ttl_bup_bp" id="ttl_bup_bp" class="form-control" readonly>
                         </div>
                         <div class="form-group mb-3 col-lg-12">
                             <label class="form-label">Total LKB</label>
-                            <input type="text" name="ttl_lkb" v-model="data.ttl_lkb" id="ttl_lkb" class="form-control">
+                            <input type="text" name="ttl_lkb" v-model="data.ttl_lkb" id="ttl_lkb" class="form-control" readonly>
                         </div>
 
                         <div class="card-footer" style="text-align: right;">
