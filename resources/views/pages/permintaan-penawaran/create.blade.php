@@ -76,7 +76,8 @@
 
                         <div class="fv-row form-group col-lg-6">
                             <label class="form-label required">PIC</label>
-                            {!! Form::text('pic', null, ['class'=>'form-control', 'id'=>'pic', 'autocomplete'=>'off', 'required']) !!}
+                            {!! Form::select('pic', $pic, null, ['class'=>'form-control form-select-solid col-sm-3', 'data-control'=>'select2', 'id'=>'pic', 'required']) !!}
+                        
                         </div>
                         
                     </div>

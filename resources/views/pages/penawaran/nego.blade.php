@@ -127,19 +127,28 @@
                     </div>
 
                     <div class="card-body">
-                        <div class="form-group mb-3 col-lg-12">
+                        <div class="form-group mb-3 col-lg-6">
                             <label class="form-label">Indeks Cadangan HPP</label>
-                            <input type="number" v-model="data.idx_cad_hpp" name="idx_cad_hpp" id="idx_cad_hpp" class="form-control currency form-control-solid" readonly>
+                            <div class="input-group mb-3 col-lg-12">
+                                <input type="number" v-model="data.idx_cad_hpp" name="idx_cad_hpp" id="idx_cad_hpp" class="form-control currency form-control-solid" readonly>
+                                <span class="input-group-text" id="basic-addon2">%</span>
+                            </div>
                         </div>
 
-                        <div class="form-group mb-3 col-lg-12">
+                        <div class="form-group mb-3 col-lg-6">
                             <label class="form-label">Indeks Cadangan Transportasi</label>
-                            <input type="number" v-model="data.idx_cad_transportasi" name="idx_cad_transportasi" id="idx_cad_transportasi" class="form-control currency form-control-solid" readonly>
+                            <div class="input-group mb-3 col-lg-12">
+                                <input type="number" v-model="data.idx_cad_transportasi" name="idx_cad_transportasi" id="idx_cad_transportasi" class="form-control currency form-control-solid" readonly>
+                                <span class="input-group-text" id="basic-addon2">%</span>
+                            </div>
                         </div>
 
-                        <div class="form-group mb-3 col-lg-12">
+                        <div class="form-group mb-3 col-lg-6">
                             <label class="form-label">Indeks HPJu</label>
-                            <input type="number" v-model="data.idx_hpju" name="idx_hpju" id="idx_hpju" class="form-control currency form-control-solid" readonly>
+                            <div class="input-group mb-3 col-lg-12">
+                                <input type="number" v-model="data.idx_hpju" name="idx_hpju" id="idx_hpju" class="form-control currency form-control-solid" readonly>
+                                <span class="input-group-text" id="basic-addon2">%</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -188,7 +197,7 @@
                     </div>
 
                     <div class="card-body">
-                        <div class="form-group mb-3 col-lg-12">
+                        <div class="form-group mb-3 col-lg-6">
                             <label class="form-label">Total</label>
                             <input type="text" name="total" v-model="data.biaya_pelaksanaan" id="total" class="form-control total currency form-control-solid" readonly>
                         </div>
@@ -201,29 +210,29 @@
                     </div>
 
                     <div class="card-body">
-                        <div class="form-group mb-3 col-lg-12">
+                        <div class="form-group mb-3 col-lg-6">
                             <label class="form-label">Total Harga Jual</label>
                             <input type="text" name="ttl_h_jual" v-model="data.ttl_h_jual" id="ttl_h_jual" class="form-control form-control-solid" readonly>
                         </div>
-                        <div class="form-group mb-3 col-lg-12">
+                        <div class="form-group mb-3 col-lg-6">
                             <label class="form-label">Total HPP</label>
                             <input type="text" name="ttl_hpp" v-model="data.ttl_hpp" id="ttl_hpp" class="form-control form-control-solid" readonly>
                         </div>
-                        <div class="form-group mb-3 col-lg-12">
+                        <div class="form-group mb-3 col-lg-6">
                             <label class="form-label">Total Transportasi</label>
                             <input type="text" name="ttl_trans" v-model="data.ttl_trans" id="ttl_trans" class="form-control form-control-solid" readonly>
                         </div>
-                        <div class="form-group mb-3 col-lg-12">
+                        <div class="form-group mb-3 col-lg-6">
                             <label class="form-label">Total BUP+BP</label>
                             <input type="text" name="ttl_bup_bp" v-model="data.ttl_bup_bp" id="ttl_bup_bp" class="form-control form-control-solid" readonly>
                         </div>
-                        <div class="form-group mb-3 col-lg-12">
+                        <div class="form-group mb-3 col-lg-6">
                             <label class="form-label">Total LKB</label>
                             <input type="text" name="ttl_lkb" v-model="data.ttl_lkb" id="ttl_lkb" class="form-control form-control-solid" readonly>
                         </div>
                         
                         <label for="diskon" class="form-label">Diskon</label>
-                        <div class="input-group mb-3 col-lg-12">
+                        <div class="input-group mb-3 col-lg-6">
                             <input type="number" name="diskon" v-model="data.diskon" id="diskon" class="form-control" aria-label="User Discount" aria-describedby="basic-addon2">
                             <span class="input-group-text" id="basic-addon2">%</span>
                         </div>

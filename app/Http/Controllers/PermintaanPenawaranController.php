@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Personal;
 use App\Models\QuotationRequest;
 use Carbon\Carbon;
 use Exception;
@@ -49,7 +50,19 @@ class PermintaanPenawaranController extends Controller
 
     public function create()
     {
-        return view('pages.permintaan-penawaran.create');
+        $pic = Personal::where('kd_pat', '1E')
+        	->where('employee_id', 'not like', "TX%")
+            ->where("st", 1)
+        	->orderBy('first_name')
+        	->get()
+        	->mapWithKeys(function($item){
+                return [$item->employee_id => $item->full_name];
+            })
+            ->all();
+        $pic = ["" => "Pilih PIC"] + $pic;
+        return view('pages.permintaan-penawaran.create', [
+            'pic' => $pic
+        ]);
     }
 
     public function store(Request $request, FlasherInterface $flasher)

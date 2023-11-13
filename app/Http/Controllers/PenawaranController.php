@@ -73,8 +73,24 @@ class PenawaranController extends Controller
     public function show($id)
     {
         $data = Quotation::find($id);
+        $produk = [];
 
-        return view('pages.penawaran.show', compact('data'));
+        if (count($data->produk) > 0) {
+            // dd($data->produk);
+            foreach ($data->produk as $row) {
+                $produk[] = [
+                    'kd_produk' => $row->kd_produk,
+                    'tipe_produk' => $row->tipe_produk,
+                    'volume' => $row->volume,
+                    'total' => $row->total,
+                    'harsat' => $row->harsat_produk,
+                    'transport' => $row->transportasi,
+                    'sbu' => $row->sbu
+                ];
+            }
+        }
+
+        return view('pages.penawaran.show', compact('data', 'produk'));
     }
 
     public function create(Request $request)
