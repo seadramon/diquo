@@ -13,7 +13,7 @@
 		<meta property="og:url" content="http://tms.wika-beton.co.id" />
 		<meta property="og:site_name" content="Keenthemes | Metronic" />
 		<link rel="canonical" href="http://tms.wika-beton.co.id" />
-		<link rel="shortcut icon" href="{{ asset('content/logo-wton.jpg') }}" />
+		<link rel="shortcut icon" href="{{ asset('content/diquo.png') }}" />
 		<!--begin::Fonts-->
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
 		<!--end::Fonts-->
@@ -45,7 +45,7 @@
 
 		<!--begin::loader-->
 		<div class="page-loader flex-column">
-			<img alt="Logo" class="h-100px" src="{{ asset('content/logo-wton.jpg') }}" />
+			<img alt="Logo" class="h-100px" src="{{ asset('content/diquo.png') }}" />
 			<div class="d-flex align-items-center mt-5">
 				<span class="spinner-border text-primary" role="status"></span>
 				<span class="text-muted fs-6 fw-semibold ms-5">Loading...</span>
@@ -168,7 +168,7 @@
 						<div class="header-brand">
 							<!--begin::Logo-->
 							<a href="#">
-								<img alt="Logo" src="{{ asset('content/logo-wton.jpg') }}" class="h-30px h-lg-45px" />
+								<img alt="Logo" src="{{ asset('content/diquo.png') }}" class="h-30px h-lg-80px" />
 							</a>
 							<!--end::Logo-->
 							<!--begin::Aside minimize-->
