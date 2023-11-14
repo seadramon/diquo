@@ -60,8 +60,7 @@ class PermintaanPenawaranController extends Controller
             ->all();
         $pic = ["" => "Pilih PIC"] + $pic;
         $se = Personal::where('employee_id', 'not like', "TX%")
-        	->where('kd_jbt', 'JBTS0001')
-            ->where("st", 1)
+        	->where("st", 1)
         	->orderBy('first_name')
         	->get()
         	->mapWithKeys(function($item){

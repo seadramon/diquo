@@ -133,8 +133,7 @@ class PenawaranController extends Controller
         $pic = ["" => "Pilih PIC"] + $pic;
 
         $se = Personal::where('employee_id', 'not like', "TX%")
-        	->where('kd_jbt', 'JBTS0001')
-            ->where("st", 1)
+        	->where("st", 1)
         	->orderBy('first_name')
         	->get()
         	->mapWithKeys(function($item){
@@ -337,7 +336,10 @@ class PenawaranController extends Controller
 	public function cetak($id)
     {
         // dd('test');
-        $pdf = Pdf::loadView('prints.penawaran');
+        $quotation = Quotation::find($id);
+        $pdf = Pdf::loadView('prints.penawaran', [
+            'quotation' => $quotation
+        ]);
 
         $filename = "Penawaran";
 

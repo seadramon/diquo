@@ -92,8 +92,8 @@
         <main>
             <table width="100%" cellspacing="0" cellpadding="0" style="margin-top: 5px;" class="common">
                 <tr>
-                    <td style="text-align: left;">Nomor : PS.03.03/WB-1E.0813/2023/P-02</td>
-                    <td style="text-align: right;">Surabaya, 08 September 2023</td>
+                    <td style="text-align: left;">Nomor : {{ $quotation->no_surat }}</td>
+                    <td style="text-align: right;">Surabaya, {{ date("d M Y")}}</td>
                 </tr>
             </table>
 
@@ -124,7 +124,7 @@
 
             <div style="font-size: 11px;margin-bottom: 5px;">
                 Dengan hormat,<br>
-                Menindaklanjuti permintaan Bapak mengenai Penawaran Harga Tiang Pancang Kotak untuk Proyek Area Banyuwangi dan Sekitarnya, berikut kami sampaikan dengan rincian sebagai berikut:
+                Menindaklanjuti permintaan Bapak mengenai Penawaran Harga Tiang Pancang Kotak untuk Proyek Area {{ $quotation->lokasi_proyek }} dan Sekitarnya, berikut kami sampaikan dengan rincian sebagai berikut:
             </div>
 
             <div style="margin-bottom: 20px;">
@@ -132,100 +132,58 @@
                 <table id="customers" width="100%" cellpadding="0" cellspacing="0">
                     <thead>
                         <tr>
-                            <th rowspan="2">No.</th>
-                            <th rowspan="2">DIMENSI <br> (mm)</th>
-                            <th rowspan="2">KELAS</th>
-                            <th rowspan="2">Number <br> of <br> Strand <br>(pcs)</th>
-                            <th colspan="3">Kapasitas</th>
-                            <th rowspan="2">SEGMEN</th>
-                            <th rowspan="2">L<br>(m')</th>
-                            <th rowspan="2">Harga Satuan <br>(Rp/m')</th>
+                            <th rowspan="3">No.</th>
+                            <th rowspan="2">DIMENSI</th>
+                            <th rowspan="3">KELAS</th>
+                            <th rowspan="2">PJG</th>
+                            <th rowspan="3">SEGMEN</th>
+                            <th colspan="3">KAPASITAS</th>
+                            <th rowspan="2">HARGA SATUAN</th>
                         </tr>
                         <tr>
-                            <th>Moment Crack <br>(kN.m)</th>
-                            <th>Moment Ultimat <br>(kN.m)</th>
-                            <th>Allowable Compression <br>(kN.m)</th>
+                            <th>CRACK</th>
+                            <th>BREAK</th>
+                            <th>AXIAL</th>
+                        </tr>
+                        <tr>
+                            <th>(mm)</th>
+                            <th>(m')</th>
+                            <th>(ton.m)</th>
+                            <th>(ton.m)</th>
+                            <th>(ton.m)</th>
+                            <th>(Rp/m')</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td rowspan="2">1</td>
-                            <td rowspan="2">TPK 300x300</td>
-                            <td rowspan="2">A</td>
-                            <td rowspan="2">5 3/8"</td>
-                            <td rowspan="2">35.70</td>
-                            <td rowspan="2">50.90</td>
-                            <td rowspan="2">1,163</td>
-                            <td>Single</td>
-                            <td>11</td>
-                            <td>300,000</td>
-                        </tr>
-                        <tr>
-                            <td>Bottom</td>
-                            <td>11</td>
-                            <td>340,000</td>
-                        </tr>
-
-                        <tr>
-                            <td rowspan="2">2</td>
-                            <td rowspan="2">TPK 300x300</td>
-                            <td rowspan="2">B</td>
-                            <td rowspan="2">6 3/8"</td>
-                            <td rowspan="2">39.00</td>
-                            <td rowspan="2">61.10</td>
-                            <td rowspan="2">1,145</td>
-                            <td>Single</td>
-                            <td>11</td>
-                            <td>310,000</td>
-                        </tr>
-                        <tr>
-                            <td>Bottom</td>
-                            <td>11</td>
-                            <td>350,000</td>
-                        </tr>
-
-                        <tr>
-                            <td rowspan="2">3</td>
-                            <td rowspan="2">TPK 300x300</td>
-                            <td rowspan="2">C</td>
-                            <td rowspan="2">4 1/2"</td>
-                            <td rowspan="2">43.90</td>
-                            <td rowspan="2">73.30</td>
-                            <td rowspan="2">1,124</td>
-                            <td>Single</td>
-                            <td>11</td>
-                            <td>320,000</td>
-                        </tr>
-                        <tr>
-                            <td>Bottom</td>
-                            <td>11</td>
-                            <td>380,000</td>
-                        </tr>
-
-                        <tr>
-                            <td rowspan="2">4</td>
-                            <td rowspan="2">TPK 300x300</td>
-                            <td rowspan="2">D</td>
-                            <td rowspan="2">5 1/2"</td>
-                            <td rowspan="2">48.20</td>
-                            <td rowspan="2">73.30</td>
-                            <td rowspan="2">1,094</td>
-                            <td>Single</td>
-                            <td>11</td>
-                            <td>340,000</td>
-                        </tr>
-                        <tr>
-                            <td>Bottom</td>
-                            <td>11</td>
-                            <td>400,000</td>
-                        </tr>
+                        @foreach ($quotation->produk as $index => $produk)
+                            @php
+                                $tipe = explode(' ',explode(' - ', $produk->tipe_produk)[1]);
+                                $segmen = "Bottom";
+                                if($tipe[2] == "M"){
+                                    $segmen = "Middle";
+                                }elseif($tipe[2] == "U"){
+                                    $segmen = "Upper";
+                                }
+                            @endphp
+                            <tr style="text-align: center">
+                                <td>{{$index+1}}.</td>
+                                <td>Dia {{ $tipe[0] * 10 }}</td>
+                                <td>{{ $tipe[1] }}</td>
+                                <td>{{ $produk->panjang }}</td>
+                                <td>{{ $segmen }}</td>
+                                <td>5.5</td>
+                                <td>8.25</td>
+                                <td>121.00</td>
+                                <td>{{ number_format($produk->hju) }}</td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
 
                 <b>B. Kondisi Harga</b>
                 <ol>
                     <li>Harga tersebut Belum termasuk PPN 11%.</li>
-                    <li>Kondisi pengiriman <strong>FOT Lokasi Proyek di Banyuwangi,</strong> dengan kondisi aman dilalui oleh Trailer dengan muatan 40 ton/rit. Tidak termasuk langsir jika jalan tidak bisa dilalui Trailer.</li>
+                    <li>Kondisi pengiriman <strong>{{ strtoupper($quotation->kondisi_pengiriman) }} Lokasi Proyek di {{ $quotation->lokasi_proyek }},</strong> dengan kondisi aman dilalui oleh Trailer dengan muatan 40 ton/rit. Tidak termasuk langsir jika jalan tidak bisa dilalui Trailer.</li>
                     <li>Tiang Pancang Kotak sudah termasuk Asesoris Bottom (Sepatu Pensil + Plat Sambung) atau Single (Sepatu Pensil + Kepala Masif).</li>
                     <li><strong>Tidak</strong> termasuk pengadaan kayu ganjal untuk penumpukan, biaya penurunan tiang pancang di lokasi proyek.</li>
                     <li><strong>Tidak</strong> termasuk biaya maupun kewajiban administrasi yang timbul untuk memasuki area proyek.</li>

@@ -29,7 +29,7 @@ class QuotationDetailResource extends JsonResource
             "email" => $this->email,
             "nama_proyek" => $this->nama_proyek,
             "lokasi_proyek" => $this->lokasi_proyek,
-            "kondisi_pengiriman" => $this->kondisi_pengiriman,
+            "kondisi_pengiriman" => strtoupper($this->kondisi_pengiriman),
             "pic" => [
                 "employee_id" => $this->pic,
                 "nama" => $this->getpic ? $this->getpic->full_name : "not found"
