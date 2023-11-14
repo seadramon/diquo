@@ -162,13 +162,18 @@
                         <table class="table table-row-bordered gy-5" width="100%">
                             <thead>
                                 <tr class="fw-semibold fs-6">
-                                    <th width="10%">&nbsp;No Produk</th>
-                                    <th width="20%">Tipe Produk</th>
-                                    <th width="10%">Volume</th>
-                                    <th width="5%">Satuan</th>
-                                    <th width="10%">HPP</th>
-                                    <th width="10%">Harga Transportasi</th>
-                                    <th width="10%">Harga Jual</th>
+                                    <tr class="fw-semibold fs-6">
+                                        <th width="10%">&nbsp;No Produk</th>
+                                        <th width="15%">Tipe Produk</th>
+                                        <th width="5%">Volume (Btg)</th>
+                                        <th width="8%">HPP (Rp/m)</th>
+                                        <th width="8%">Transportasi (Rp/m)</th>
+                                        <th width="8%">Hpju (Rp/m)</th>
+                                        <th width="5%">Indeks (%)</th>
+                                        <th width="8%">Hju (Rp/m)</th>
+                                        <th width="8%">Total Hju (Rp/m)</th>
+                                        <th width="8%">Nego Total Hju (Rp/m)</th>
+                                    </tr>
                                 </tr>
                             </thead>
                             <tbody>
@@ -177,14 +182,17 @@
                                         <td>&nbsp;@{{ row.kd_produk }}</td>
                                         <td>@{{ row.tipe_produk }}</td>
                                         <td>@{{ row.volume }}</td>
-                                        <td>&nbsp;</td>
-                                        <td>@{{ 'Rp. ' + thousandSeparator(row.harsat) }}</td>
-                                        <td>@{{ 'Rp. ' + thousandSeparator(row.transport) }}</td>
-                                        <td>@{{ 'Rp. ' + thousandSeparator(row.total) }}</td>
+                                        <td>@{{ 'Rp. ' + thousandSeparator(Math.ceil(row.harsat)) }}</td>
+                                        <td>@{{ 'Rp. ' + thousandSeparator(Math.ceil(row.transport)) }}</td>
+                                        <td>@{{ 'Rp. ' + thousandSeparator(Math.ceil(row.hpju)) }}</td>
+                                        <td>@{{ data.idx_hpju }}</td>
+                                        <td>@{{ 'Rp. ' + thousandSeparator(row.hju) }}</td>
+                                        <td>@{{ 'Rp. ' + thousandSeparator(row.total_hju) }}</td>
+                                        <td>@{{ 'Rp. ' + thousandSeparator(row.disc_total_hju) }}</td>
                                     </tr>    
                                 </template>
                                 <tr v-if="data.produk.length == 0">
-                                    <td class="text-center" colspan="7">No result</td>
+                                    <td class="text-center" colspan="9">No result</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -210,43 +218,113 @@
                     </div>
 
                     <div class="card-body">
-                        <div class="form-group mb-3 col-lg-6">
-                            <label class="form-label">Total Harga Jual</label>
-                            <input type="text" name="ttl_h_jual" v-model="data.ttl_h_jual" id="ttl_h_jual" class="form-control form-control-solid" readonly>
+                        <div class="form-group mb-3 col-lg-12">
+                            <label class="form-label">Diskon</label>
+                            <div class="input-group mb-3 col-lg-12">
+                                <input type="number" name="diskon" v-model="data.diskon" id="diskon" class="form-control" aria-label="User Discount" aria-describedby="basic-addon2">
+                                <span class="input-group-text" id="basic-addon2">%</span>
+                            </div>
                         </div>
-                        <div class="form-group mb-3 col-lg-6">
-                            <label class="form-label">Total HPP</label>
-                            <input type="text" name="ttl_hpp" v-model="data.ttl_hpp" id="ttl_hpp" class="form-control form-control-solid" readonly>
+                        <div class="row">
+                            <div class="col-6">
+                                <h3>Sebelum Diskon</h3>
+                                <div class="form-group mb-3 col-lg-12">
+                                    <label class="form-label">Total Harga Jual</label>
+                                    <input type="text" name="ttl_h_jual" v-model="data.ttl_h_jual" id="ttl_h_jual" class="form-control" readonly>
+                                </div>
+                                <div class="form-group mb-3 col-lg-12">
+                                    <label class="form-label">Total HPP</label>
+                                    <input type="text" name="ttl_hpp" v-model="data.ttl_hpp" id="ttl_hpp" class="form-control" readonly>
+                                </div>
+                                <div class="form-group mb-3 col-lg-12">
+                                    <label class="form-label">Total Transportasi</label>
+                                    <input type="text" name="ttl_trans" v-model="data.ttl_trans" id="ttl_trans" class="form-control" readonly>
+                                </div>
+                                <div class="form-group mb-3 col-lg-12">
+                                    <label class="form-label">Total BUP+BP</label>
+                                    <div class="input-group mb-3 col-lg-12">
+                                        <span class="input-group-text" id="basic-addon2">Rp</span>
+                                        <input type="text" name="ttl_bup_bp" v-model="data.ttl_bup_bp" id="ttl_bup_bp" class="form-control" readonly>
+                                    </div>
+                                    <div class="input-group mb-3 col-lg-12">
+                                        <input type="text" name="biaya_pelaksanaan_" v-model="data.biaya_pelaksanaan" id="biaya_pelaksanaan_" class="form-control" readonly>
+                                        <span class="input-group-text" id="basic-addon2">%</span>
+                                    </div>
+                                </div>
+                                <div class="form-group mb-3 col-lg-12">
+                                    <label class="form-label">Total LKB</label>
+                                    <div class="input-group mb-3 col-lg-12">
+                                        <span class="input-group-text" id="basic-addon2">Rp</span>
+                                        <input type="text" name="ttl_lkb" v-model="data.ttl_lkb" id="ttl_lkb" class="form-control" readonly>
+                                    </div>
+                                    <div class="input-group mb-3 col-lg-12">
+                                        <input type="text" name="p_lkb" v-model="data.p_lkb" id="p_lkb" class="form-control" readonly>
+                                        <span class="input-group-text" id="basic-addon2">%</span>
+                                    </div>
+                                </div>
+                                <div class="form-group mb-3 col-lg-12">
+                                    <label class="form-label">Indeks</label>
+                                    <div class="input-group mb-3 col-lg-12">
+                                        <input type="text" name="ttl_indeks" v-model="data.ttl_indeks" id="ttl_indeks" class="form-control" readonly>
+                                        <span class="input-group-text" id="basic-addon2">%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <h3>Setelah Diskon</h3>
+                                <div class="form-group mb-3 col-lg-12">
+                                    <label class="form-label">Total Harga Jual</label>
+                                    <input type="text" name="disc_ttl_h_jual" v-model="data.disc_ttl_h_jual" id="ttl_h_jual" class="form-control" readonly>
+                                </div>
+                                <div class="form-group mb-3 col-lg-12">
+                                    <label class="form-label">Total HPP</label>
+                                    <input type="text" name="disc_ttl_hpp" v-model="data.disc_ttl_hpp" id="ttl_hpp" class="form-control" readonly>
+                                </div>
+                                <div class="form-group mb-3 col-lg-12">
+                                    <label class="form-label">Total Transportasi</label>
+                                    <input type="text" name="disc_ttl_trans" v-model="data.disc_ttl_trans" id="ttl_trans" class="form-control" readonly>
+                                </div>
+                                <div class="form-group mb-3 col-lg-12">
+                                    <label class="form-label">Total BUP+BP</label>
+                                    <div class="input-group mb-3 col-lg-12">
+                                        <span class="input-group-text" id="basic-addon2">Rp</span>
+                                        <input type="text" name="disc_ttl_bup_bp" v-model="data.disc_ttl_bup_bp" id="ttl_bup_bp" class="form-control" readonly>
+                                    </div>
+                                    <div class="input-group mb-3 col-lg-12">
+                                        <input type="text" name="biaya_pelaksanaan_" v-model="data.biaya_pelaksanaan" id="biaya_pelaksanaan_" class="form-control" readonly>
+                                        <span class="input-group-text" id="basic-addon2">%</span>
+                                    </div>
+                                </div>
+                                <div class="form-group mb-3 col-lg-12">
+                                    <label class="form-label">Total LKB</label>
+                                    <div class="input-group mb-3 col-lg-12">
+                                        <span class="input-group-text" id="basic-addon2">Rp</span>
+                                        <input type="text" name="disc_ttl_lkb" v-model="data.disc_ttl_lkb" id="ttl_lkb" class="form-control" readonly>
+                                    </div>
+                                    <div class="input-group mb-3 col-lg-12">
+                                        <input type="text" name="disc_p_lkb" v-model="data.disc_p_lkb" id="p_lkb" class="form-control" readonly>
+                                        <span class="input-group-text" id="basic-addon2">%</span>
+                                    </div>
+                                </div>
+                                <div class="form-group mb-3 col-lg-12">
+                                    <label class="form-label">Indeks</label>
+                                    <div class="input-group mb-3 col-lg-12">
+                                        <input type="text" name="disc_ttl_indeks" v-model="data.disc_ttl_indeks" id="ttl_indeks" class="form-control" readonly>
+                                        <span class="input-group-text" id="basic-addon2">%</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group mb-3 col-lg-6">
-                            <label class="form-label">Total Transportasi</label>
-                            <input type="text" name="ttl_trans" v-model="data.ttl_trans" id="ttl_trans" class="form-control form-control-solid" readonly>
-                        </div>
-                        <div class="form-group mb-3 col-lg-6">
-                            <label class="form-label">Total BUP+BP</label>
-                            <input type="text" name="ttl_bup_bp" v-model="data.ttl_bup_bp" id="ttl_bup_bp" class="form-control form-control-solid" readonly>
-                        </div>
-                        <div class="form-group mb-3 col-lg-6">
-                            <label class="form-label">Total LKB</label>
-                            <input type="text" name="ttl_lkb" v-model="data.ttl_lkb" id="ttl_lkb" class="form-control form-control-solid" readonly>
-                        </div>
-                        
-                        <label for="diskon" class="form-label">Diskon</label>
-                        <div class="input-group mb-3 col-lg-6">
-                            <input type="number" name="diskon" v-model="data.diskon" id="diskon" class="form-control" aria-label="User Discount" aria-describedby="basic-addon2">
-                            <span class="input-group-text" id="basic-addon2">%</span>
-                        </div>
+                    </div>
+                    <div class="card-footer" style="text-align: right;">
+                        <button class="btn btn-success mr-2" @click.prevent="calculateTotal">@{{ btnCalculateTotal }}</button>
+                        <a href="{{ route('penawaran.index') }}" class="btn btn-light btn-active-light-primary me-2">Kembali</a>
 
-                        <div class="card-footer" style="text-align: right;">
-                            <button class="btn btn-success mr-2" @click.prevent="calculateTotal">@{{ btnCalculateTotal }}</button>
-                            <a href="{{ route('penawaran.index') }}" class="btn btn-light btn-active-light-primary me-2">Kembali</a>
-
-                            <button type="submit" data-kt-contacts-type="submit" class="btn btn-primary" @click.prevent="onSubmit()">
-                                <span class="indicator-label">Save</span>
-                                <span class="indicator-progress">Please wait...
-                                <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-                            </button>
-                        </div>
+                        <button type="submit" data-kt-contacts-type="submit" class="btn btn-primary" @click.prevent="onSubmit()">
+                            <span class="indicator-label">Save</span>
+                            <span class="indicator-progress">Please wait...
+                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                        </button>
                     </div>
                 </div>
             </form>
@@ -330,6 +408,11 @@ function initialState (){
             ttl_hpp:'',
             ttl_trans:'',
             ttl_bup_bp:'',
+            disc_ttl_lkb:'',
+            disc_ttl_h_jual:'',
+            disc_ttl_hpp:'',
+            disc_ttl_trans:'',
+            disc_ttl_bup_bp:'',
             diskon:0,
             produk: {!! json_encode($produk) !!}
         },
@@ -570,12 +653,17 @@ let app = new Vue({
             let vm = this
             let ttl = 0
             let t_lkb = 0
+            let p_lkb = 0
             let t_h_jual = 0
             let t_hpp = 0
             let t_trans = 0
             let t_bup_bp = 0
+            let disc_t_h_jual = 0
+            let disc_t_bup_bp = 0
+            let disc_t_lkb = 0
+            let disc_p_lkb = 0
             vm.btnCalculateTotal = 'Menghitung...'
-
+            
             var cad_hpp = 0;
             if(vm.data.idx_cad_hpp != ""){
                 cad_hpp = parseInt(vm.data.idx_cad_hpp.toString().replace(/[^0-9\.]/g,'')) / 100;
@@ -588,69 +676,53 @@ let app = new Vue({
             if(vm.data.idx_hpju != ""){
                 hpju = 1 - (parseInt(vm.data.idx_hpju.toString().replace(/[^0-9\.]/g,'')) / 100);
             }
-
-            if (vm.data.diskon > 0) {
-                vm.data.produk = {!! json_encode($produk) !!}
-            }
+        
             for (produk of vm.data.produk) {
-                // if (vm.data.diskon > 0) {
-                //     var discount = vm.data.diskon / 100
-                //     var tmp_harsat = 0
-                //     var tmp_trans = 0
-                //     var tmp_total = 0 //hrgjual
-                       
-                //     tmp_harsat = produk.harsat - (produk.harsat * discount)
-                //     produk.harsat = parseFloat(tmp_harsat).toFixed(0)
-
-                //     tmp_trans = produk.transport - (produk.transport * discount) 
-                //     produk.transport = parseFloat(tmp_trans).toFixed(0)
-
-                //     tmp_total = parseInt(produk.harsat) + parseInt(produk.transport)
-                //     produk.total = parseFloat(tmp_total / hpju).toFixed(0)
-                // }   
-
-                // var vol_prod = produk.volume.toString().replace(/[^0-9\.]/g,'')
-                // t_h_jual += parseFloat(produk.total) * vol_prod
-                // t_hpp += parseFloat(produk.harsat/(1+cad_hpp)) * vol_prod
-                // t_trans += parseFloat(produk.transport/(1+cad_trans)) * vol_prod
-                // ttl += parseFloat(produk.total) * vol_prod
                 var tmp_harsat = 0
                 var tmp_trans = 0
                 var tmp_total = 0
+                
+                tmp_harsat = parseInt(produk.harsat) * parseInt(produk.volume) * parseInt(produk.panjang)
+                tmp_trans = parseInt(produk.transport) * parseInt(produk.volume) * parseInt(produk.panjang)
+                tmp_total = parseInt(produk.total_hju)
+                
+                t_h_jual += tmp_total
+                t_hpp += tmp_harsat
+                t_trans += tmp_trans
                 if (vm.data.diskon > 0) {
-                    var discount = vm.data.diskon / 100
-                       
-                    tmp_harsat = produk.harsat - (produk.harsat * discount)
-                    produk.harsat = vm.thousandSeparator(parseFloat(tmp_harsat).toFixed(0))
-
-                    tmp_trans = produk.transport - (produk.transport * discount) 
-                    produk.transport = vm.thousandSeparator(parseFloat(tmp_trans).toFixed(0))
-
-                    tmp_total = (tmp_harsat + tmp_trans) / hpju
-                    produk.total = vm.thousandSeparator(parseFloat(tmp_total).toFixed(0))
-                }else{
-                    tmp_harsat = produk.harsat
-                    tmp_trans = produk.transport
-                    tmp_total = produk.total
-                }   
-
-                var vol_prod = produk.volume.toString().replace(/[^0-9\.]/g,'')
-                t_h_jual += parseFloat(tmp_total) * vol_prod
-                t_hpp += parseFloat((tmp_harsat/(1+cad_hpp)).toFixed(0)).toFixed(0) * vol_prod
-                t_trans += parseFloat((tmp_trans/(1+cad_trans)).toFixed(0)).toFixed(0) * vol_prod
-                ttl += parseFloat(tmp_total) * vol_prod
+                    produk.disc_total_hju = produk.total_hju * (1 - (parseFloat(vm.data.diskon) / 100))
+                    disc_t_h_jual += produk.disc_total_hju
+                }
             }
             if(vm.data.biaya_pelaksanaan != ""){
-                t_bup_bp = (parseInt(vm.data.biaya_pelaksanaan.replace(".", "")) * ttl / 100)
-                ttl = ttl + t_bup_bp
+                t_bup_bp = (parseFloat(vm.data.biaya_pelaksanaan.toString().replace(/[^0-9\.]/g,'')) * t_h_jual / 100).toFixed(0)
+                // ttl = ttl + t_bup_bp
+                if (vm.data.diskon > 0) {
+                    disc_t_bup_bp = (parseFloat(vm.data.biaya_pelaksanaan.toString().replace(/[^0-9\.]/g,'')) * disc_t_h_jual / 100).toFixed(0)
+                }
             }
-            t_lkb = ((t_h_jual - t_hpp - t_trans - t_bup_bp) / t_h_jual * 100).toFixed(2)
-            vm.data.total_penawaran = vm.thousandSeparator(total)
+            
+            t_lkb = (t_h_jual - t_hpp - t_trans - t_bup_bp).toFixed(0)
+            p_lkb = (t_lkb / t_h_jual * 100).toFixed(2)
             vm.data.ttl_h_jual = vm.thousandSeparator(t_h_jual)
-            vm.data.ttl_hpp = vm.thousandSeparator(t_hpp)
+            vm.data.ttl_hpp = vm.thousandSeparator(t_hpp.toFixed())
             vm.data.ttl_trans = vm.thousandSeparator(t_trans)
             vm.data.ttl_bup_bp = vm.thousandSeparator(t_bup_bp)
-            vm.data.ttl_lkb = t_lkb + "%"
+            vm.data.ttl_lkb = vm.thousandSeparator(t_lkb)
+            vm.data.ttl_indeks = parseFloat(p_lkb) + parseFloat(vm.data.biaya_pelaksanaan.toString().replace(/[^0-9\.]/g,''))
+            vm.data.p_lkb = p_lkb
+            
+            if (vm.data.diskon > 0) {
+                disc_t_lkb = (disc_t_h_jual - t_hpp - t_trans - disc_t_bup_bp).toFixed(0)
+                disc_p_lkb = (disc_t_lkb / disc_t_h_jual * 100).toFixed(2)
+                vm.data.disc_ttl_h_jual = vm.thousandSeparator(disc_t_h_jual)
+                vm.data.disc_ttl_hpp = vm.thousandSeparator(t_hpp.toFixed())
+                vm.data.disc_ttl_trans = vm.thousandSeparator(t_trans)
+                vm.data.disc_ttl_bup_bp = vm.thousandSeparator(disc_t_bup_bp)
+                vm.data.disc_ttl_lkb = vm.thousandSeparator(disc_t_lkb)
+                vm.data.disc_ttl_indeks = (parseFloat(disc_p_lkb) + parseFloat(vm.data.biaya_pelaksanaan.toString().replace(/[^0-9\.]/g,''))).toFixed(2)
+                vm.data.disc_p_lkb = disc_p_lkb
+            }
             vm.btnCalculateTotal = 'Hitung Total'
         },
         thousandSeparator(val){

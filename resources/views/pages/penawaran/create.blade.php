@@ -216,12 +216,14 @@
                             <thead>
                                 <tr class="fw-semibold fs-6">
                                     <th width="10%">&nbsp;No Produk</th>
-                                    <th width="20%">Tipe Produk</th>
+                                    <th width="15%">Tipe Produk</th>
                                     <th width="5%">Volume (Btg)</th>
-                                    <th width="5%">Satuan</th>
-                                    <th width="10%">HPP</th>
-                                    <th width="10%">Harga Transportasi</th>
-                                    <th width="10%">Harga Jual</th>
+                                    <th width="8%">HPP (Rp/m)</th>
+                                    <th width="8%">Transportasi (Rp/m)</th>
+                                    <th width="8%">Hpju (Rp/m)</th>
+                                    <th width="5%">Indeks (%)</th>
+                                    <th width="8%">Hju (Rp/m)</th>
+                                    <th width="8%">Total Hju (Rp/m)</th>
                                     <th width="5%">Aksi</th>
                                 </tr>
                             </thead>
@@ -230,9 +232,11 @@
                                     <td>&nbsp;@{{ row.kd_produk }}</td>
                                     <td>@{{ row.tipe_produk}}</td>
                                     <td>@{{ row.volume }}</td>
-                                    <td>@{{ row.satuan }}</td>
                                     <td>@{{ row.ket_harsat }}</td>
                                     <td>@{{ row.ket_transport }}</td>
+                                    <td>@{{ row.ket_hpju }}</td>
+                                    <td>@{{ row.indeks }}</td>
+                                    <td>@{{ row.ket_hju }}</td>
                                     <td>@{{ row.ket_total }}</td>
                                     <td>
                                         <a href="javascript:void(0)" style="color: red;" @click.prevent="removeProduk(idx)">Hapus</a>&nbsp;
@@ -240,9 +244,14 @@
                                 </tr>
 
                                 <tr class="text-dark-800 text-center" v-if="data.produk.length < 1">
-                                    <td colspan="8">&nbsp;Produk Kosong</td>
+                                    <td colspan="10">&nbsp;Produk Kosong</td>
                                 </tr>
                             </tbody>
+                            {{-- <tfoot>
+                                <tr>
+
+                                </tr>
+                            </tfoot> --}}
                         </table>
                     </div>
                 </div>
@@ -283,11 +292,32 @@
                         </div>
                         <div class="form-group mb-3 col-lg-6">
                             <label class="form-label">Total BUP+BP</label>
-                            <input type="text" name="ttl_bup_bp" v-model="data.ttl_bup_bp" id="ttl_bup_bp" class="form-control" readonly>
+                            <div class="input-group mb-3 col-lg-12">
+                                <span class="input-group-text" id="basic-addon2">Rp</span>
+                                <input type="text" name="ttl_bup_bp" v-model="data.ttl_bup_bp" id="ttl_bup_bp" class="form-control" readonly>
+                            </div>
+                            <div class="input-group mb-3 col-lg-12">
+                                <input type="text" name="biaya_pelaksanaan_" v-model="data.biaya_pelaksanaan" id="biaya_pelaksanaan_" class="form-control" readonly>
+                                <span class="input-group-text" id="basic-addon2">%</span>
+                            </div>
                         </div>
                         <div class="form-group mb-3 col-lg-6">
                             <label class="form-label">Total LKB</label>
-                            <input type="text" name="ttl_lkb" v-model="data.ttl_lkb" id="ttl_lkb" class="form-control" readonly>
+                            <div class="input-group mb-3 col-lg-12">
+                                <span class="input-group-text" id="basic-addon2">Rp</span>
+                                <input type="text" name="ttl_lkb" v-model="data.ttl_lkb" id="ttl_lkb" class="form-control" readonly>
+                            </div>
+                            <div class="input-group mb-3 col-lg-12">
+                                <input type="text" name="p_lkb" v-model="data.p_lkb" id="p_lkb" class="form-control" readonly>
+                                <span class="input-group-text" id="basic-addon2">%</span>
+                            </div>
+                        </div>
+                        <div class="form-group mb-3 col-lg-6">
+                            <label class="form-label">Indeks</label>
+                            <div class="input-group mb-3 col-lg-12">
+                                <input type="text" name="ttl_indeks" v-model="data.ttl_indeks" id="ttl_indeks" class="form-control" readonly>
+                                <span class="input-group-text" id="basic-addon2">%</span>
+                            </div>
                         </div>
 
                         <div class="card-footer" style="text-align: right;">
@@ -378,11 +408,13 @@ function initialState (){
             idx_cad_transportasi:'',
             idx_hpju:'',
             biaya_pelaksanaan:'',
+            p_lkb:'',
             ttl_lkb:'',
             ttl_h_jual:'',
             ttl_hpp:'',
             ttl_trans:'',
             ttl_bup_bp:'',
+            ttl_indeks:'',
             produk: {!! json_encode($produk) !!}
         },
         dropdown: {
@@ -566,39 +598,40 @@ let app = new Vue({
             let tipe_produk = vm.data.tipe_produk
             var cad_hpp = 0;
             if(vm.data.idx_cad_hpp != ""){
-                cad_hpp = parseInt(vm.data.idx_cad_hpp.toString().replace(/[^0-9\.]/g,'')) / 100;
+                cad_hpp = parseFloat(vm.data.idx_cad_hpp.toString().replace(/[^0-9\.]/g,'')) / 100;
             }
             var hpju = 1;
             if(vm.data.idx_hpju != ""){
-                hpju = 1 - (parseInt(vm.data.idx_hpju.toString().replace(/[^0-9\.]/g,'')) / 100);
+                hpju = 1 - (parseFloat(vm.data.idx_hpju.toString().replace(/[^0-9\.]/g,'')) / 100);
             }
             var cad_trans = 0;
             if(vm.data.idx_cad_transportasi != ""){
-                cad_trans = (parseInt(vm.data.idx_cad_transportasi.toString().replace(/[^0-9\.]/g,'')) / 100);
+                cad_trans = (parseFloat(vm.data.idx_cad_transportasi.toString().replace(/[^0-9\.]/g,'')) / 100);
             }
             // console.log(hpju)
             if(vm.data.tipe == 'S'){
                 axios.get(
                     "{{ route('penawaran.harsat') }}" + "?kd_produk=" + vm.data.kd_produk + "&pat=" + vm.data.kd_pabrik
                 ).then(response => {
-                    panjang = parseInt(response.data.panjang)
+                    panjang = parseFloat(response.data.panjang)
                     ton = parseFloat(response.data.ton)
                     harsat = parseInt(response.data.nilai_hpp)
                     var h_trans = 0
+                    var h_hpju = 0
+                    var h_hju = 0
                     if(vm.data.harga_angkutan != ""){
-                        console.log(vm.data.harga_angkutan)
-                        console.log(vm.data)
                         h_trans = parseInt(vm.data.harga_angkutan.toString().replace(/[^0-9\.]/g,''))
                         h_trans = h_trans + (h_trans * cad_trans);
-                        h_trans = parseFloat((h_trans / ton).toFixed(0))
+                        h_trans = parseFloat((h_trans * ton).toFixed(0))
                     }
-                    // console.log(h_trans)
                     harsat = harsat + (harsat * cad_hpp);
-                    if(vm.data.sbu == 'B' || vm.data.sbu == 'E'){
-                        harsat = parseFloat((harsat / panjang).toFixed(0))
-                    }
-                    total = harsat + h_trans
-                    total = parseFloat((total / hpju).toFixed(0))
+                    h_hpju = h_trans + harsat
+                    h_hju = Math.round(h_hpju / hpju/1000)*1000
+                    // if(vm.data.sbu == 'B' || vm.data.sbu == 'E'){
+                    //     harsat = parseFloat((harsat / panjang).toFixed(0))
+                    // }
+                    total = h_hju * panjang * vm.data.volume
+                    // total = parseFloat((total / hpju).toFixed(0))
 
                     if(vm.data.sbu == 'A' || vm.data.sbu == 'F' || vm.data.sbu == 'F'){
                         var satuan_ = 'pcs'
@@ -616,11 +649,18 @@ let app = new Vue({
                         tipe_produk: tipe_produk,
                         // volume: vm.data.volume + ' ' + satuan_,
                         volume: vm.data.volume,
+                        indeks: vm.data.idx_hpju.toString().replace(/[^0-9\.]/g,''),
                         satuan: satuan_,
+                        ton: ton,
+                        panjang: panjang,
                         harsat: harsat,
+                        ket_harsat: 'Rp. ' + vm.thousandSeparator(harsat),
+                        hpju: h_hpju,
+                        ket_hpju: 'Rp. ' + vm.thousandSeparator(h_hpju),
+                        hju: h_hju,
+                        ket_hju: 'Rp. ' + vm.thousandSeparator(h_hju),
                         transport: h_trans,
                         ket_transport: 'Rp. ' + vm.thousandSeparator(h_trans),
-                        ket_harsat: 'Rp. ' + vm.thousandSeparator(harsat),
                         total: total,
                         ket_total: 'Rp. ' + vm.thousandSeparator(total)
                     }
@@ -634,9 +674,9 @@ let app = new Vue({
                 var h_trans = 0
                 if(vm.data.harga_angkutan != ""){
                     h_trans = parseInt(vm.data.harga_angkutan.toString().replace(/[^0-9\.]/g,''))
-                    h_trans = h_trans + (h_trans * cad_trans);
+                    h_trans = (h_trans + (h_trans * cad_trans)).toFixed(0);
                 }
-                harsat = harsat + (harsat * cad_hpp);
+                harsat = (harsat + (harsat * cad_hpp)).toFixed(0);
                 total = harsat + h_trans
                 total = parseFloat((total / hpju).toFixed(0))
 
@@ -727,6 +767,7 @@ let app = new Vue({
             let vm = this
             let ttl = 0
             let t_lkb = 0
+            let p_lkb = 0
             let t_h_jual = 0
             let t_hpp = 0
             let t_trans = 0
@@ -735,31 +776,34 @@ let app = new Vue({
 
             var cad_hpp = 0;
             if(app.data.idx_cad_hpp != ""){
-                cad_hpp = parseInt(app.data.idx_cad_hpp.toString().replace(/[^0-9\.]/g,'')) / 100;
+                cad_hpp = parseFloat(app.data.idx_cad_hpp.toString().replace(/[^0-9\.]/g,'')) / 100;
             }
             var cad_trans = 0;
             if(app.data.idx_cad_transportasi != ""){
-                cad_trans = (parseInt(app.data.idx_cad_transportasi.toString().replace(/[^0-9\.]/g,'')) / 100);
+                cad_trans = (parseFloat(app.data.idx_cad_transportasi.toString().replace(/[^0-9\.]/g,'')) / 100);
             }
 
             for (produk of app.data.produk) {
                 var vol_prod = produk.volume.toString().replace(/[^0-9\.]/g,'')
-                t_h_jual += parseFloat(produk.total) * vol_prod
-                t_hpp += parseFloat((produk.harsat/(1+cad_hpp)).toFixed(0)) * vol_prod
-                t_trans += parseFloat((produk.transport/(1+cad_trans)).toFixed(0)) * vol_prod
-                ttl += parseFloat(produk.total) * vol_prod
+                t_h_jual += produk.total
+                t_hpp += produk.harsat * produk.panjang * vol_prod
+                t_trans += produk.transport * produk.panjang * vol_prod
+                ttl += produk.total
             }
             if(app.data.biaya_pelaksanaan != ""){
-                t_bup_bp = (parseInt(app.data.biaya_pelaksanaan.replace(".", "")) * ttl / 100)
-                ttl = ttl + t_bup_bp
+                t_bup_bp = (parseFloat(app.data.biaya_pelaksanaan.toString().replace(/[^0-9\.]/g,'')) * t_h_jual / 100).toFixed(0)
+                // ttl = ttl + t_bup_bp
             }
-            t_lkb = ((t_h_jual - t_hpp - t_trans - t_bup_bp) / t_h_jual * 100).toFixed(2)
-            app.data.total_penawaran = vm.thousandSeparator(total)
+            t_lkb = (t_h_jual - t_hpp - t_trans - t_bup_bp).toFixed(0)
+            p_lkb = (t_lkb / t_h_jual * 100).toFixed(2)
+            // app.data.total_penawaran = vm.thousandSeparator(total)
             app.data.ttl_h_jual = vm.thousandSeparator(t_h_jual)
-            app.data.ttl_hpp = vm.thousandSeparator(t_hpp)
+            app.data.ttl_hpp = vm.thousandSeparator(t_hpp.toFixed())
             app.data.ttl_trans = vm.thousandSeparator(t_trans)
             app.data.ttl_bup_bp = vm.thousandSeparator(t_bup_bp)
-            app.data.ttl_lkb = t_lkb + "%"
+            app.data.ttl_lkb = vm.thousandSeparator(t_lkb)
+            app.data.ttl_indeks = parseFloat(p_lkb) + parseFloat(app.data.biaya_pelaksanaan.toString().replace(/[^0-9\.]/g,''))
+            app.data.p_lkb = p_lkb
             app.btnAddProduct = 'Hitung Total'
         },
         thousandSeparator(val){

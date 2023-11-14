@@ -35,10 +35,10 @@ class PenawaranController extends Controller
             ->addColumn('menu', function ($model) {
                 $column = '<div class="btn-group">
                             <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Menu
+                            Aksi
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="' . route('penawaran.show', $model->id) . '">Show</a></li>
+                            <li><a class="dropdown-item" href="' . route('penawaran.show', $model->id) . '">Lihat</a></li>
 							<li><a class="dropdown-item" href="' . route('penawaran.nego', ['id' => $model->id]) . '" target="_blank">Nego</a></li>
                             <li><a class="dropdown-item" href="' . route('penawaran.print', ['id' => $model->id]) . '" target="_blank">Cetak</a></li>
                         </ul>
@@ -85,6 +85,11 @@ class PenawaranController extends Controller
                     'total' => $row->total,
                     'harsat' => $row->harsat_produk,
                     'transport' => $row->transportasi,
+                    'hpju' => $row->hpju,
+                    'hju' => $row->hju,
+                    'panjang' => $row->panjang,
+                    'ton' => $row->ton,
+                    'total_hju' => $row->total_hju,
                     'sbu' => $row->sbu
                 ];
             }
@@ -117,8 +122,7 @@ class PenawaranController extends Controller
         	"NS" => "Non Standard",
         ];
 
-        $pic = Personal::where('kd_pat', '1E')
-        	->where('employee_id', 'not like', "TX%")
+        $pic = Personal::where('employee_id', 'not like', "TX%")
             ->where("st", 1)
         	->orderBy('first_name')
         	->get()
@@ -128,8 +132,7 @@ class PenawaranController extends Controller
             ->all();
         $pic = ["" => "Pilih PIC"] + $pic;
 
-        $se = Personal::where('kd_pat', '1E')
-        	->where('employee_id', 'not like', "TX%")
+        $se = Personal::where('employee_id', 'not like', "TX%")
         	->where('kd_jbt', 'JBTS0001')
             ->where("st", 1)
         	->orderBy('first_name')
@@ -222,7 +225,7 @@ class PenawaranController extends Controller
 		  	$data->idx_cad_transportasi = str_replace(',', '', $main['idx_cad_transportasi']);
 		  	$data->idx_hpju = str_replace(',', '', $main['idx_hpju']);
 		  	// biaya
-		  	$data->biaya_pelaksanaan = !empty($main['biaya_pelaksanaan'])?str_replace(".", "", $main['biaya_pelaksanaan']):0;
+		  	$data->biaya_pelaksanaan = !empty($main['biaya_pelaksanaan']) ? str_replace(",", "", $main['biaya_pelaksanaan']):0;
             $data->status = "penawaran";
 		  	$data->save();
 		  	$id = $data->id;
@@ -241,6 +244,8 @@ class PenawaranController extends Controller
                     $produk->transportasi = str_replace(',', '', $row['transport']);
                     $produk->volume = str_replace(',', '', $row['volume']);
                     $produk->total = str_replace(',', '', $row['total']);
+                    $produk->ton = str_replace(',', '', $row['ton']);
+                    $produk->panjang = str_replace(',', '', $row['panjang']);
 
 	                $produk->save();
 	            }
@@ -309,7 +314,8 @@ class PenawaranController extends Controller
 
     	// return $data;
     	return response()->json([
-            "nilai_hpp" => $data->nilai_hpp ?? 0,
+            // "nilai_hpp" => $data->nilai_hpp ?? 0,
+            "nilai_hpp" => 15321,
             "ton" => ($produk->kg ?? 1000) / 1000,
             "panjang" => $produk->panjang ?? 1,
         ]);
@@ -325,7 +331,7 @@ class PenawaranController extends Controller
                 $sql->where('kd_muat', $request->kd_pabrik);
             })
             ->first();
-    	return response()->json(['result' => 'success', 'harga' => $harga->h_final ?? '0']);
+    	return response()->json(['result' => 'success', 'harga' => $harga->h_final ?? '90000']);
     }
 
 	public function cetak($id)
@@ -354,6 +360,12 @@ class PenawaranController extends Controller
                     'total' => $row->total,
                     'harsat' => $row->harsat_produk,
                     'transport' => $row->transportasi,
+                    'hpju' => $row->hpju,
+                    'hju' => $row->hju,
+                    'panjang' => $row->panjang,
+                    'ton' => $row->ton,
+                    'total_hju' => $row->total_hju,
+                    'disc_total_hju' => 0,
                     'sbu' => $row->sbu
                 ];
             }
@@ -376,6 +388,7 @@ class PenawaranController extends Controller
             $no_baru = intval(substr($no_surat, -2)) + 1;
             $newdata->no_surat = substr($no_surat, 0, strlen($no_surat) - 3) . "P". sprintf('%02d', $no_baru);
 
+            $newdata->diskon = $main['diskon'];
             $newdata->parent_id = $data->id;
             $newdata->save();
             $id = $newdata->id;
@@ -397,6 +410,8 @@ class PenawaranController extends Controller
                     $produk->transportasi = str_replace(',', '', $row['transport']);
                     $produk->volume = str_replace(',', '', $row['volume']);
                     $produk->total = str_replace(',', '', $row['total']);
+                    $produk->ton = str_replace(',', '', $row['ton']);
+                    $produk->panjang = str_replace(',', '', $row['panjang']);
 
                     $produk->save();
                 }
