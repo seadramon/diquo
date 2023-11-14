@@ -279,7 +279,7 @@ class PenawaranController extends Controller
 	    		$data->where('tipe', 'LIKE', '%'. $search . '%');
 	    	}
 
-	    	$result = $data->get();
+	    	$result = $data->orderBy('kd_produk', 'asc')->get();
 	    }
 
     	return $result;

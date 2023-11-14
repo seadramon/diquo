@@ -123,12 +123,18 @@
                         </div>
                         <div class="form-group mb-3 col-lg-6">
                             <label class="form-label">Jarak</label>
-                            <input type="text" v-model="data.jarak" name="data.jarak" id="jarak" class="form-control jarak">
+                            <div class="input-group mb-3 col-lg-12">
+                                <input type="text" v-model="data.jarak" name="data.jarak" id="jarak" class="form-control jarak">
+                                <span class="input-group-text" id="basic-addon2">Km</span>
+                            </div>
                         </div>
 
                         <div class="form-group mb-3 col-lg-6">
                             <label class="form-label">Harga Angkutan</label>
-                            <input type="text" readonly v-model="data.harga_angkutan" name="harga_angkutan" id="harga_angkutan" class="form-control form-control-solid">
+                            <div class="input-group mb-3 col-lg-12">
+                                <input type="text" readonly v-model="data.harga_angkutan" name="harga_angkutan" id="harga_angkutan" class="form-control form-control-solid">
+                                <span class="input-group-text" id="basic-addon2">Rp/Ton</span>
+                            </div>
                         </div>
                         <div class="mb-3 col-lg-5">
                             <a class="btn btn-primary" @click.prevent="showPrice()">@{{ btnLihatHarga }}</a>
@@ -144,7 +150,7 @@
 
                     <div class="card-body">
                         <div class="form-group mb-3 col-lg-6">
-                            <label class="form-label">Indeks Cadangan HPP</label>
+                            <label class="form-label">Cadangan HPP</label>
                             <div class="input-group mb-3 col-lg-12">
                                 <input type="number" v-model="data.idx_cad_hpp" name="idx_cad_hpp" id="idx_cad_hpp" class="form-control currency">
                                 <span class="input-group-text" id="basic-addon2">%</span>
@@ -152,7 +158,7 @@
                         </div>
 
                         <div class="form-group mb-3 col-lg-6">
-                            <label class="form-label">Indeks Cadangan Transportasi</label>
+                            <label class="form-label">Cadangan Transportasi</label>
                             <div class="input-group mb-3 col-lg-12">
                                 <input type="number" v-model="data.idx_cad_transportasi" name="idx_cad_transportasi" id="idx_cad_transportasi" class="form-control currency">
                                 <span class="input-group-text" id="basic-addon2">%</span>
@@ -160,7 +166,7 @@
                         </div>
 
                         <div class="form-group mb-3 col-lg-6">
-                            <label class="form-label">Indeks HPJu</label>
+                            <label class="form-label">Indeks Penawaran</label>
                             <div class="input-group mb-3 col-lg-12">
                                 <input type="number" v-model="data.idx_hpju" name="idx_hpju" id="idx_hpju" class="form-control currency">
                                 <span class="input-group-text" id="basic-addon2">%</span>
@@ -188,7 +194,10 @@
 
                         <div class="form-group mb-3 col-lg-6">
                             <label class="form-label">Volume</label>
-                            <input type="text" name="volume" id="volume" v-model="data.volume" class="form-control volume currency">
+                            <div class="input-group mb-3 col-lg-12">
+                                <input type="text" name="volume" id="volume" v-model="data.volume" class="form-control volume currency">
+                                <span class="input-group-text" id="basic-addon2">Btg</span>
+                            </div>
                         </div>
                         <div class="form-group mb-3 col-lg-6" v-show="data.tipe == 'NS'">
                             <label class="form-label">Satuan</label>
@@ -208,7 +217,7 @@
                                 <tr class="fw-semibold fs-6">
                                     <th width="10%">&nbsp;No Produk</th>
                                     <th width="20%">Tipe Produk</th>
-                                    <th width="5%">Volume</th>
+                                    <th width="5%">Volume (Btg)</th>
                                     <th width="5%">Satuan</th>
                                     <th width="10%">HPP</th>
                                     <th width="10%">Harga Transportasi</th>
@@ -340,8 +349,8 @@ function initialState (){
         data: {
             request_id: "{{ $permintaan->id ?? "" }}",
             no_surat:'',
-            nama_pelanggan:"{{ $permintaan->nama_pelanggan ?? "" }}",
-            nama_perusahaan:'',
+            nama_pelanggan:"",
+            nama_perusahaan:"{{ $permintaan->nama_pelanggan ?? "" }}",
             no_hp:'',
             email:'',
             nama_proyek:"{{ $permintaan->nama_proyek ?? "" }}",
@@ -379,7 +388,7 @@ function initialState (){
         dropdown: {
             lokasi : {!! json_encode($lokasi) !!},
             kondisi : {!! json_encode($kondisi) !!},
-            pic : {!! json_encode($pic) !!},
+            pic : {!! json_encode($se) !!},
             se : {!! json_encode($se) !!},
             sbu : {!! json_encode($sbu) !!},
             tipe : {!! json_encode($tipe) !!},

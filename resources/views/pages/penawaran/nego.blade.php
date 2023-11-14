@@ -128,7 +128,7 @@
 
                     <div class="card-body">
                         <div class="form-group mb-3 col-lg-6">
-                            <label class="form-label">Indeks Cadangan HPP</label>
+                            <label class="form-label">Cadangan HPP</label>
                             <div class="input-group mb-3 col-lg-12">
                                 <input type="number" v-model="data.idx_cad_hpp" name="idx_cad_hpp" id="idx_cad_hpp" class="form-control currency form-control-solid" readonly>
                                 <span class="input-group-text" id="basic-addon2">%</span>
@@ -136,7 +136,7 @@
                         </div>
 
                         <div class="form-group mb-3 col-lg-6">
-                            <label class="form-label">Indeks Cadangan Transportasi</label>
+                            <label class="form-label">Cadangan Transportasi</label>
                             <div class="input-group mb-3 col-lg-12">
                                 <input type="number" v-model="data.idx_cad_transportasi" name="idx_cad_transportasi" id="idx_cad_transportasi" class="form-control currency form-control-solid" readonly>
                                 <span class="input-group-text" id="basic-addon2">%</span>
@@ -144,7 +144,7 @@
                         </div>
 
                         <div class="form-group mb-3 col-lg-6">
-                            <label class="form-label">Indeks HPJu</label>
+                            <label class="form-label">Indeks Penawaran</label>
                             <div class="input-group mb-3 col-lg-12">
                                 <input type="number" v-model="data.idx_hpju" name="idx_hpju" id="idx_hpju" class="form-control currency form-control-solid" readonly>
                                 <span class="input-group-text" id="basic-addon2">%</span>

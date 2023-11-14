@@ -43,7 +43,7 @@
                         </div>
 
                         <div class="fv-row form-group col-lg-6 mb-3">
-                            <label class="form-label required">Nama Pelanggan</label>
+                            <label class="form-label required">Nama Perusahaan</label>
                             {!! Form::text('nama_pelanggan', null, ['class'=>'form-control', 'id'=>'nama_pelanggan', 'autocomplete'=>'off', 'required']) !!}
                         </div>
 
@@ -75,8 +75,8 @@
                         </div>
 
                         <div class="fv-row form-group col-lg-6">
-                            <label class="form-label required">PIC</label>
-                            {!! Form::select('pic', $pic, null, ['class'=>'form-control form-select-solid col-sm-3', 'data-control'=>'select2', 'id'=>'pic', 'required']) !!}
+                            <label class="form-label required">SE</label>
+                            {!! Form::select('pic', $se, null, ['class'=>'form-control form-select-solid col-sm-3', 'data-control'=>'select2', 'id'=>'pic', 'required']) !!}
                         
                         </div>
                         
