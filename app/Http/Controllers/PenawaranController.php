@@ -409,7 +409,7 @@ class PenawaranController extends Controller
                     $produk->harsat_produk = str_replace(',', '', $row['harsat']);
                     $produk->transportasi = str_replace(',', '', $row['transport']);
                     $produk->volume = str_replace(',', '', $row['volume']);
-                    $produk->total = str_replace(',', '', $row['total']);
+                    $produk->total = str_replace(',', '', $row['disc_total_hju']);
                     $produk->ton = str_replace(',', '', $row['ton']);
                     $produk->panjang = str_replace(',', '', $row['panjang']);
 
