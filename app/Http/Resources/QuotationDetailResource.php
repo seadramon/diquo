@@ -16,10 +16,14 @@ class QuotationDetailResource extends JsonResource
     {
         // return parent::toArray($request);
         $produk = $this->produk;
-        $total_penawaran = $produk->map(function($item){
-            return $item->volume * $item->total;
-        })->sum();
-        $total_penawaran = $total_penawaran + ($total_penawaran * $this->biaya_pelaksanaan / 100);
+        $total_harga_jual = $produk->map(function($item){ return $item->total_hju; })->sum();
+        $total_hpp = $produk->map(function($item){ return $item->harsat_produk * $item->panjang * $item->volume; })->sum();
+        $total_transportasi = $produk->map(function($item){ return $item->transportasi * $item->panjang * $item->volume; })->sum();
+        $total_bup = $total_harga_jual * $this->biaya_pelaksanaan / 100;
+        $total_lkb = $total_harga_jual - $total_hpp - $total_transportasi - $total_bup;
+        $persen_lkb = round($total_lkb / $total_harga_jual * 100, 2);
+        $total_index = $persen_lkb + $this->biaya_pelaksanaan;
+
         return [
             "id" => $this->id,
             "no_surat" => $this->no_surat,
@@ -50,12 +54,13 @@ class QuotationDetailResource extends JsonResource
             "idx_cad_transportasi" => $this->idx_cad_transportasi,
             "idx_hpju" => $this->idx_hpju,
             "biaya_pelaksanaan" => $this->biaya_pelaksanaan,
-            "total_penawaran" => $total_penawaran,
-            "total_harga_jual" => $total_penawaran,
-            "total_hpp" => $total_penawaran,
-            "total_transportasi" => $total_penawaran,
-            "total_bup" => $total_penawaran,
-            "total_lkb" => $total_penawaran,
+            "total_harga_jual" => $total_harga_jual,
+            "total_hpp" => $total_hpp,
+            "total_transportasi" => $total_transportasi,
+            "total_bup" => $total_bup,
+            "total_lkb" => $total_lkb,
+            "persen_lkb" => $persen_lkb,
+            "total_index" => $total_index,
             "products" => QuotationProdukResource::collection($produk),
         ];
     }
