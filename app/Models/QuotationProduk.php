@@ -39,6 +39,6 @@ class QuotationProduk extends Model
     
     public function getTotalHjuAttribute()
     {
-        return $this->hju * $this->volume * $this->panjang;
+        return $this->hju * $this->volume * ($this->panjang ?? 1);
     }
 }
