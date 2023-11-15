@@ -420,7 +420,7 @@ function initialState (){
         dropdown: {
             lokasi : {!! json_encode($lokasi) !!},
             kondisi : {!! json_encode($kondisi) !!},
-            pic : {!! json_encode($se) !!},
+            pic : {!! json_encode($pic) !!},
             se : {!! json_encode($se) !!},
             sbu : {!! json_encode($sbu) !!},
             tipe : {!! json_encode($tipe) !!},
