@@ -315,7 +315,7 @@ class PenawaranController extends Controller
 
     	// return $data;
     	return response()->json([
-            "nilai_hpp" => $data->nilai_hpp ?? 0,
+            "nilai_hpp" => ($data->nilai_hpp / ($produk->panjang ?? 1)) ?? 0,
             // "nilai_hpp" => 15321,
             "ton" => ($produk->kg ?? 1000) / 1000,
             "panjang" => $produk->panjang ?? 1,
