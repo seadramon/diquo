@@ -51,6 +51,7 @@ class PermintaanPenawaranController extends Controller
     public function create()
     {
         $pic = Personal::where('employee_id', 'not like', "TX%")
+            ->where('kd_gas', '2BK')
             ->where("st", 1)
         	->orderBy('first_name')
         	->get()
@@ -60,6 +61,7 @@ class PermintaanPenawaranController extends Controller
             ->all();
         $pic = ["" => "Pilih PIC"] + $pic;
         $se = Personal::where('employee_id', 'not like', "TX%")
+            ->where('kd_jbt', 'JBTS0001')
         	->where("st", 1)
         	->orderBy('first_name')
         	->get()

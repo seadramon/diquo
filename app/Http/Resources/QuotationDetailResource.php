@@ -21,7 +21,7 @@ class QuotationDetailResource extends JsonResource
         $total_transportasi = $produk->map(function($item){ return $item->transportasi * $item->panjang * $item->volume; })->sum();
         $total_bup = $total_harga_jual * $this->biaya_pelaksanaan / 100;
         $total_lkb = $total_harga_jual - $total_hpp - $total_transportasi - $total_bup;
-        $persen_lkb = round($total_lkb / $total_harga_jual * 100, 2);
+        $persen_lkb = $total_harga_jual > 0 ? round($total_lkb / $total_harga_jual * 100, 2) : 0;
         $total_index = $persen_lkb + $this->biaya_pelaksanaan;
 
         return [

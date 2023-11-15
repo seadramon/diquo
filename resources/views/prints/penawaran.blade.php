@@ -171,9 +171,9 @@
                                 <td>{{ $tipe[1] }}</td>
                                 <td>{{ $produk->panjang }}</td>
                                 <td>{{ $segmen }}</td>
-                                <td>5.5</td>
-                                <td>8.25</td>
-                                <td>121.00</td>
+                                <td>{{ $produk->produk->cap_crack ?? '-'}}</td>
+                                <td>{{ $produk->produk->cap_break ?? '-'}}</td>
+                                <td>{{ $produk->produk->cap_axial ?? '-'}}</td>
                                 <td>{{ number_format($produk->hju) }}</td>
                             </tr>
                         @endforeach

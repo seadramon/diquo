@@ -32,6 +32,10 @@ class QuotationProduk extends Model
     {
         return intval(round($this->hpju * ( 1 + ($this->quotation->idx_hpju / 100)), -3));
     }
+
+    public function produk(){
+        return $this->belongsTo(Produk::class, 'kd_produk', 'kd_produk');
+    }
     
     public function getTotalHjuAttribute()
     {
