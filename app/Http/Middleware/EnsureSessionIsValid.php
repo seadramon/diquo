@@ -37,7 +37,7 @@ class EnsureSessionIsValid
             Session::put('TMS_ACTION_MENU', json_encode($rm->action_menu ?? []));
             return $next($request);
         }else{
-            return redirect()->route('vendor.login');
+            return redirect()->route('login');
         }
         // else{
         //     if(session()->has('TMP_WBSESSID')){
