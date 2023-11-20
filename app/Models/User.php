@@ -13,7 +13,7 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    protected $table = "tms_users";
+    protected $table = "quo_users";
 
     /**
      * The attributes that are mass assignable.
@@ -22,14 +22,11 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'username',
-        'user_id',
+        'employee_id',
         'password',
-        'trader_id',
         'fullname',
         'phone',
-        'vendor_id',
-        'name',
-        'position'
+        'name'
     ];
 
     /**
