@@ -33,6 +33,10 @@
 	        [v-cloak] {
 	            display: none;
 	        }
+	        .msg-error {
+				font-size: 12px;
+				color: red;
+			}
 		</style>
 		@yield('css')
 	</head>
@@ -150,6 +154,14 @@
 											<i class="' . $menu->icon . '"></i>
 										</span>
 										<span class="menu-title">Penawaran</span>
+									</a>
+								</div>
+								<div class="menu-item">
+									<a class="menu-link" href="{{ route('user.index') }}">
+										<span class="menu-icon">
+											<i class="' . $menu->icon . '"></i>
+										</span>
+										<span class="menu-title">Manajemen User</span>
 									</a>
 								</div>
 							</div>

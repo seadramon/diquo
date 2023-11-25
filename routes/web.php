@@ -26,6 +26,7 @@ use App\Http\Controllers\Report\MonitoringDistribusiController;
 use App\Http\Middleware\EnsureSessionIsValid;
 
 use App\Http\Controllers\PenawaranController;
+use App\Http\Controllers\UsersController;
 
 use App\Models\User;
 
@@ -70,6 +71,15 @@ Route::middleware('auth')->group(function () {
 		Route::resource('/',  PermintaanPenawaranController::class)->except([
 			'show', 'destroy', 'edit'
 		])->parameters(['' => 'permintaan-penawaran']);
+	});
+
+	Route::group(['prefix' => '/user', 'as' => 'user.'], function(){
+		Route::post('/destroy', [UsersController::class, 'destroy'])->name('destroy');
+		Route::get('/data', [UsersController::class, 'data'])->name('data');
+		Route::get('search-employee', [UsersController::class, 'getEmployee'])->name('search-employee');
+		Route::resource('/',  UsersController::class)->except([
+			'show', 'destroy'
+		])->parameters(['' => 'user']);
 	});
 });
 
