@@ -622,7 +622,7 @@ let app = new Vue({
                     if(vm.data.harga_angkutan != ""){
                         h_trans = parseInt(vm.data.harga_angkutan.toString().replace(/[^0-9\.]/g,''))
                         h_trans = h_trans + (h_trans * cad_trans);
-                        h_trans = parseFloat((h_trans * ton).toFixed(0))
+                        h_trans = parseFloat((h_trans * ton / panjang).toFixed(0))
                     }
                     harsat = harsat + (harsat * cad_hpp);
                     h_hpju = h_trans + harsat
