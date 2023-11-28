@@ -37,21 +37,28 @@
                             <input type="password" name="confirm_password" v-model="data.confirm_password" id="confirm_password" class="form-control">
                         </div>
                         <div class="form-group mb-3 col-lg-6">
-                            <label class="form-label">List Menu</label>
+                            <label class="form-label">List Menu Web</label>
 
-                            <div class="form-check form-check-custom form-check-solid mb-2">
-                                <input class="form-check-input" v-model="data.listmenu" value="permintaan-penawaran" type="checkbox" id="permintaan-penawaran"/>
-                                <label class="form-check-label" for="permintaan-penawaran">
-                                    Permintaan Penawaran
-                                </label>
-                            </div>
+                            @foreach ($web as $item)
+                                <div class="form-check form-check-custom form-check-solid mb-2">
+                                    <input class="form-check-input" v-model="data.listmenuweb" value="{{$item}}" type="checkbox" value="" id="{{$item}}"/>
+                                    <label class="form-check-label" for="{{$item}}">
+                                        {{ ucwords($item) }}
+                                    </label>
+                                </div>
+                            @endforeach
+                        </div>
+                        <div class="form-group mb-3 col-lg-6">
+                            <label class="form-label">List Menu Mobile</label>
 
-                            <div class="form-check form-check-custom form-check-solid mb-2">
-                                <input class="form-check-input" v-model="data.listmenu" value="penawaran" type="checkbox" id="penawaran"/>
-                                <label class="form-check-label" for="penawaran">
-                                    Penawaran
-                                </label>
-                            </div>
+                            @foreach ($mobile as $item)
+                                <div class="form-check form-check-custom form-check-solid mb-2">
+                                    <input class="form-check-input" v-model="data.listmenumobile" value="{{$item}}" type="checkbox" value="" id="{{$item}}"/>
+                                    <label class="form-check-label" for="{{$item}}">
+                                        {{ ucwords($item) }}
+                                    </label>
+                                </div>
+                            @endforeach
                         </div>
 
                         <div class="card-footer" style="text-align: right;">
@@ -96,7 +103,8 @@ function initialState (){
             employee_id:"{{ $data->employee_id }}",
             password: '',
             confirm_password: '',
-            listmenu: {!! json_encode($listmenu) !!}
+            listmenuweb: {!! json_encode($listmenuweb) !!},
+            listmenumobile: {!! json_encode($listmenumobile) !!}
         },
         err: {
             password: '',

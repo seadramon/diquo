@@ -44,19 +44,35 @@ class UsersController extends Controller
     public function create()
     {
 		$employees = [];
+		$web = [
+			'permintaan-penawaran',
+			'penawaran',
+			'manajemen-user'
+		];
+		$mobile = [
+			'approval'
+		];
 
-		return view('pages.user.create', compact('employees'));
+		return view('pages.user.create', compact('employees', 'web', 'mobile'));
     }
 
     public function edit($id)
     {
     	$menulogin = [];
+		$web = [
+			'permintaan-penawaran',
+			'penawaran',
+			'manajemen-user'
+		];
+		$mobile = [
+			'approval'
+		];
 
 		$data = User::find($id);
-		$listmenu = json_decode($data->data);
-		$listmenu = $listmenu->web;
+		$listmenuweb = $data->data['web'] ?? [];
+		$listmenumobile = $data->data['mobile'] ?? [];
 
-		return view('pages.user.edit', compact('id', 'data', 'menulogin', 'listmenu'));
+		return view('pages.user.edit', compact('id', 'data', 'menulogin', 'listmenuweb', 'listmenumobile', 'web', 'mobile'));
     }
 
     public function getEmployee(Request $request)
@@ -92,7 +108,8 @@ class UsersController extends Controller
     		DB::beginTransaction();
 
     		$data = [
-    			'web' => $request->listmenu
+    			'web' => $request->listmenuweb,
+    			'mobile' => $request->listmenumobile
     		];
 
     		$user = new User;
@@ -100,7 +117,7 @@ class UsersController extends Controller
     		$user->username = $request->employee_id;
     		$user->employee_id = $request->employee_id;
     		$user->password = Hash::make($request->password);
-    		$user->data = json_encode($data);
+    		$user->data = $data;
 
     		$user->save();
 
@@ -120,14 +137,15 @@ class UsersController extends Controller
     		DB::beginTransaction();
 
     		$data = [
-    			'web' => $request->listmenu
+    			'web' => $request->listmenuweb,
+    			'mobile' => $request->listmenumobile
     		];
 
     		$dataupdate = User::find($user);
     		if (!empty($request->password)) {
     			$dataupdate->password = Hash::make($request->password);
     		}
-    		$dataupdate->data = json_encode($data);
+    		$dataupdate->data = $data;
 
     		$dataupdate->save();
 

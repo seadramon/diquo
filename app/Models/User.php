@@ -12,7 +12,7 @@ use DB;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes, HasApiTokens;
 
     protected $table = "quo_users";
 

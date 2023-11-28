@@ -71,7 +71,7 @@
 							<!--begin::Symbol-->
 							<div class="symbol symbol-50px">
 								@php
-									$fullname = "Quotation";
+									$fullname = Auth::user()->name;
 								@endphp
 								<img src="{{ Avatar::create($fullname)->setBackground("#10aded")->toBase64() }}" alt="" />
 							</div>
@@ -86,7 +86,7 @@
 										<a href="#" class="text-white text-hover-primary fs-7 fw-bold">{{ $fullname }}</a>
 										<!--end::Username-->
 										<!--begin::Description-->
-										<span class="text-gray-600 fw-semibold d-block fs-8 mb-1" style="width: 100px; word-wrap: break-word;">Damar</span>
+										<span class="text-gray-600 fw-semibold d-block fs-8 mb-1" style="width: 100px; word-wrap: break-word;">{{Auth::user()->employee_id}}</span>
 										<!--end::Description-->
 										<!--begin::Label-->
 										<div class="d-flex align-items-center text-success fs-9">
@@ -140,30 +140,36 @@
 						<div class="hover-scroll-overlay-y px-2 my-5 my-lg-5" id="kt_aside_menu_wrapper" data-kt-scroll="true" data-kt-scroll-height="auto" data-kt-scroll-dependencies="{default: '#kt_aside_toolbar, #kt_aside_footer', lg: '#kt_header, #kt_aside_toolbar, #kt_aside_footer'}" data-kt-scroll-wrappers="#kt_aside_menu" data-kt-scroll-offset="5px">
 							<!--begin::Menu-->
 							<div class="menu menu-column menu-title-gray-800 menu-state-title-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-500" id="#kt_aside_menu" data-kt-menu="true">
-								<div class="menu-item">
-									<a class="menu-link" href="{{ route('permintaan-penawaran.index') }}">
-										<span class="menu-icon">
-											<i class="' . $menu->icon . '"></i>
-										</span>
-										<span class="menu-title">Permintaan Penawaran</span>
-									</a>
-								</div>
-								<div class="menu-item">
-									<a class="menu-link" href="{{ route('penawaran.index') }}">
-										<span class="menu-icon">
-											<i class="' . $menu->icon . '"></i>
-										</span>
-										<span class="menu-title">Penawaran</span>
-									</a>
-								</div>
-								<div class="menu-item">
-									<a class="menu-link" href="{{ route('user.index') }}">
-										<span class="menu-icon">
-											<i class="' . $menu->icon . '"></i>
-										</span>
-										<span class="menu-title">Manajemen User</span>
-									</a>
-								</div>
+								@if (in_array('permintaan-penawaran', $web_access))
+									<div class="menu-item">
+										<a class="menu-link" href="{{ route('permintaan-penawaran.index') }}">
+											<span class="menu-icon">
+												<i class="' . $menu->icon . '"></i>
+											</span>
+											<span class="menu-title">Permintaan Penawaran</span>
+										</a>
+									</div>
+								@endif
+								@if (in_array('penawaran', $web_access))
+									<div class="menu-item">
+										<a class="menu-link" href="{{ route('penawaran.index') }}">
+											<span class="menu-icon">
+												<i class="' . $menu->icon . '"></i>
+											</span>
+											<span class="menu-title">Penawaran</span>
+										</a>
+									</div>
+								@endif
+								@if (in_array('manajemen-user', $web_access))
+									<div class="menu-item">
+										<a class="menu-link" href="{{ route('user.index') }}">
+											<span class="menu-icon">
+												<i class="' . $menu->icon . '"></i>
+											</span>
+											<span class="menu-title">Manajemen User</span>
+										</a>
+									</div>
+								@endif
 							</div>
 							<!--end::Menu-->
 						</div>

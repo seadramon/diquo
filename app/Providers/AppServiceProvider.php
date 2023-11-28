@@ -28,6 +28,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Sanctum::usePersonalAccessTokenModel(PersonalAccessToken::class);
+        View::composer('layout.layout2', function($view) {
+            $view->with('web_access', Auth::user()->data['web'] ?? []);
+        });
         /*Sanctum::usePersonalAccessTokenModel(PersonalAccessToken::class);
         View::composer('layout.layout2', function($view)
         {
