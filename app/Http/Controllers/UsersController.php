@@ -65,7 +65,9 @@ class UsersController extends Controller
 			'manajemen-user'
 		];
 		$mobile = [
-			'approval'
+			'penawaran',
+			'approval1',
+			'approval2',
 		];
 
 		$data = User::find($id);
@@ -80,8 +82,7 @@ class UsersController extends Controller
     	$search = !empty($request->search)?strtolower($request->search):"";
     	$result = null;
 
-    	$data = Personal::select('employee_id', 'first_title', 'first_name', 'last_name', 'last_title')
-    		->where('kd_pat', '2E');
+    	$data = Personal::select('employee_id', 'first_title', 'first_name', 'last_name', 'last_title');
 
     	if ($search) {
     		$data->where(function ($query) use($search){

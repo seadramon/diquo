@@ -122,7 +122,7 @@
                                     @endif
 									<div class="fv-row mb-8">
                                         <!--begin::Email-->
-                                        <input type="text" placeholder="Kode Pegawai" name="username" autocomplete="off" class="form-control bg-transparent" />
+                                        <input type="text" placeholder="NIP" name="username" autocomplete="off" class="form-control bg-transparent" />
                                         <!--end::Email-->
                                         @if ($errors->has('username'))
                                             <span class="text-danger">{{ $errors->first('username') }}</span>
