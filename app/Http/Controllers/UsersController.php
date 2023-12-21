@@ -50,7 +50,9 @@ class UsersController extends Controller
 			'manajemen-user'
 		];
 		$mobile = [
-			'approval'
+			'penawaran',
+			'approval1',
+			'approval2',
 		];
 
 		return view('pages.user.create', compact('employees', 'web', 'mobile'));
@@ -82,7 +84,7 @@ class UsersController extends Controller
     	$search = !empty($request->search)?strtolower($request->search):"";
     	$result = null;
 
-    	$data = Personal::select('employee_id', 'first_title', 'first_name', 'last_name', 'last_title');
+    	$data = Personal::select('employee_id', 'first_title', 'first_name', 'last_name', 'last_title')->where('st', 1);
 
     	if ($search) {
     		$data->where(function ($query) use($search){

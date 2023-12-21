@@ -27,6 +27,12 @@ class PermintaanPenawaranController extends Controller
         $query = QuotationRequest::select('*');
 
         return DataTables::eloquent($query)
+            ->editColumn('request_date', function ($model) {
+                return date('d-m-Y', strtotime($model->request_date));
+            })
+            ->editColumn('due_date', function ($model) {
+                return date('d-m-Y', strtotime($model->due_date));
+            })
             ->editColumn('status', function ($model) {
                 if(in_array($model->status, [null, "baru"])){
                     return "<span class=\"badge badge-light-info\">Baru</span>";

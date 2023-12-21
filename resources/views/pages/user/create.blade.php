@@ -151,7 +151,7 @@ let app = new Vue({
                         return {
                             results: $.map(data, function (item) {
                                 return {
-                                    text: item.full_name,
+                                    text: item.employee_id + "|" + item.full_name,
                                     id: item.employee_id
                                 }
                             })

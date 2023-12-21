@@ -99,26 +99,26 @@
 
             <div  class="common">
                 Kepada Yth : <br>
-                <b>PT Wijaya Karya (Persero), Tbk</b> <br>
-                <b>Divisi EPCC</b><br>
-                Jl.D.I. Panjaitan Kav. 9-10
+                <b>{{ $quotation->nama_perusahaan }}</b> <br>
+                {{-- <b>Divisi EPCC</b><br>
+                Jl.D.I. Panjaitan Kav. 9-10 --}}
             </div>
 
             <table width="100%" class="common">
                 <tr>
                     <td width="5%" style="text-align: right;font-weight: bold;">Up</td>
                     <td width="1%" style="text-align: right;font-weight: bold;">:</td>
-                    <td width="94%" style="text-align: left;">Bapak Asep</td>
+                    <td width="94%" style="text-align: left;">Bapak/Ibu {{ $quotation->nama_pelanggan }}</td>
                 </tr>
                 <tr>
                     <td width="5%" style="text-align: right;font-weight: bold;">Telp</td>
                     <td width="1%" style="text-align: right;font-weight: bold;">:</td>
-                    <td width="94%" style="text-align: left;">+ 62 853-3613-2114</td>
+                    <td width="94%" style="text-align: left;">{{ $quotation->no_hp }}</td>
                 </tr>
                 <tr>
                     <td width="5%" style="text-align: right;font-weight: bold;">Perihal</td>
                     <td width="1%" style="text-align: right;font-weight: bold;">:</td>
-                    <td width="94%" style="text-align: left;">Penawaran Harga Tiang Pancang Kotak Wika Beton</td>
+                    <td width="94%" style="text-align: left;">Penawaran Harga {{$quotation->getsbu->nama_sbu ?? ''}}</td>
                 </tr>
             </table>
 
@@ -171,9 +171,9 @@
                                 <td>{{ $tipe[1] }}</td>
                                 <td>{{ $produk->panjang }}</td>
                                 <td>{{ $segmen }}</td>
-                                <td>{{ $produk->produk->cap_crack ?? '-'}}</td>
-                                <td>{{ $produk->produk->cap_break ?? '-'}}</td>
-                                <td>{{ $produk->produk->cap_axial ?? '-'}}</td>
+                                <td>{{ $produk->produk->kap_crack ?? '-'}}</td>
+                                <td>{{ $produk->produk->kap_break ?? '-'}}</td>
+                                <td>{{ $produk->produk->kap_compression ?? '-'}}</td>
                                 <td>{{ number_format($produk->hju) }}</td>
                             </tr>
                         @endforeach
@@ -208,7 +208,7 @@
                     <li>Mutu produk dijamin dengan sertifikasi sistem manajemen <strong>ISO 9001 : 2015 dan SNI 6880 : 2016.</strong></li>
                     <li>Penawaran berlaku selama 14 (Empat Belas) hari, terhitung sejak tanggal surat diatas, dan atau selama tidak ada perubahan kebijakan dari pemerintah menyangkut moneter, kenaikan harga BBM, kenaikan tarif dasar listrik (TDL) dan Lain - Lain.</li>
                 </ol><br>
-
+{{-- nomer hp ambil dr personal kolom wa_number SE atau PIC --}}
                 Demikian penawaran kami, untuk informasi dan negosiasi lebih lanjut dapat menghubungi kantor kami - 031.99003395-96 dengan <strong>Sdr. Holidin Arif - 0852 2480 7485 atau Firman Pambudi - 0813 2928 2724.</strong> Atas perhatiannya kami ucapkan terima kasih.
             </div>
 
@@ -219,7 +219,9 @@
                         Hormat Kami,<br>
                         PT WIJAYA KARYA BETON Tbk<br>
                         Wilayah Penjualan V<br>
-                        <img style="text-align: center;width:95%;height:auto;" src="{{public_path('assets/media/logos/signature.jpg')}}">
+                        @if ($quotation->app2 == 1)
+                            <img style="text-align: center;width:95%;height:auto;" src="{{public_path('assets/media/logos/signature.jpg')}}">
+                        @endif
                         <u><b>ZAENUDIN SAKTI WIBOWO</b></u><br>
                         Manajer
                     </td>
