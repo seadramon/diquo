@@ -209,7 +209,7 @@
                     <li>Penawaran berlaku selama 14 (Empat Belas) hari, terhitung sejak tanggal surat diatas, dan atau selama tidak ada perubahan kebijakan dari pemerintah menyangkut moneter, kenaikan harga BBM, kenaikan tarif dasar listrik (TDL) dan Lain - Lain.</li>
                 </ol><br>
 {{-- nomer hp ambil dr personal kolom wa_number SE atau PIC --}}
-                Demikian penawaran kami, untuk informasi dan negosiasi lebih lanjut dapat menghubungi kantor kami - 031.99003395-96 dengan <strong>Sdr. Holidin Arif - 0852 2480 7485 atau Firman Pambudi - 0813 2928 2724.</strong> Atas perhatiannya kami ucapkan terima kasih.
+                Demikian penawaran kami, untuk informasi dan negosiasi lebih lanjut dapat menghubungi kantor kami - 031.99003395-96 dengan <strong>Sdr. {{ $quotation->getse->full_name }} - {{ $quotation->getse->wa_number }} atau {{ $quotation->getpic->full_name }} - {{ $quotation->getpic->wa_number }}.</strong> Atas perhatiannya kami ucapkan terima kasih.
             </div>
 
             <table width="100%">

@@ -98,8 +98,8 @@ class PermintaanPenawaranController extends Controller
             $quoRequest = new QuotationRequest();
             $quoRequest->nama_proyek = $request->nama_proyek;
             $quoRequest->nama_pelanggan = $request->nama_pelanggan;
-            $quoRequest->request_date = $request->request_date;
-            $quoRequest->due_date = $request->due_date;
+            $quoRequest->request_date = date('Y-m-d', strtotime($request->request_date));
+            $quoRequest->due_date = date('Y-m-d', strtotime($request->due_date));
             $quoRequest->pic = $request->pic;
             $quoRequest->status = "baru";
             
